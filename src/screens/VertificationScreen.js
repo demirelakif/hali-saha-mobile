@@ -48,7 +48,7 @@ const VertificationScreen = ({ navigation }) => {
                         </Text>
                     </TouchableOpacity>
                     <View style={styles.button}>
-                        <ButtonLarge icon={true} text={"Doğrula"} />
+                        <ButtonLarge onPress={()=>{navigation.navigate("Home")}} icon={true} text={"Doğrula"} />
                     </View>
                     <Text></Text>
                 </View>
