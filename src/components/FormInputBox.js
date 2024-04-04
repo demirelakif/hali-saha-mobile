@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
     fontSize: 21,
     fontFamily: "Montserrat-Medium",
     color: Colors.textColor,
-    marginLeft: 12
+    marginLeft: 12,
+    maxWidth:'90%'
   },
   textIcon: {
     top: 14,

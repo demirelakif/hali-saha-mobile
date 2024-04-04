@@ -1,38 +1,34 @@
-import { View, Text, Dimensions, StyleSheet, Image } from 'react-native'
+import { View, Text, Dimensions, StyleSheet, Image, Keyboard } from 'react-native'
 import React from 'react'
 import BackButton from '../components/BackButton'
 import PitchCard from '../components/PitchCard'
-import { ScrollView } from 'react-native-gesture-handler'
+import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import FormInputBox from '../components/FormInputBox'
 
-const HomeScreen = ({ navigation }) => {
+const SearchScreen = ({ navigation }) => {
 
   const goToLogin = () => {
     // navigation.navigate("Login")
   }
+  const handlePressOutside = () => {
+    Keyboard.dismiss(); // Klavyeyi kapat
+  };
 
   return (
-    <View style={styles.main}>
+    <TouchableWithoutFeedback style={styles.main} onPress={handlePressOutside}>
       <View style={styles.head}>
         {/* <View style={styles.backButton}>
           <BackButton onpress={goToLogin} icon={require('../assets/outlineBack.png')} />
         </View> */}
         <View style={styles.headText}>
-          <Text style={styles.headTextStyle}>Anasayfa</Text>
+          <Text style={styles.headTextStyle}>Ara</Text>
         </View>
       </View>
 
       <View style={styles.box}>
         <View style={styles.nearbyPitches}>
           <View style={styles.textAndImage}>
-            <View style={styles.boxText}>
-              <Text style={styles.nearbyText}>
-                Yakındaki
-              </Text>
-              <Text style={styles.nearbyText}>
-                Sahalar
-              </Text>
-            </View>
-            <Image style={styles.imageStyle} source={require('../assets/playerPng.png')}/>
+            <FormInputBox placeholder={"Saha ara"} icon={require('../assets/search.png')}/>
           </View>
           <ScrollView style={styles.scrollView}>
             <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} onPress={() => { console.log("pressed") }} />
@@ -48,7 +44,7 @@ const HomeScreen = ({ navigation }) => {
 
       </View>
 
-    </View>
+    </TouchableWithoutFeedback>
 
   )
 }
@@ -97,7 +93,7 @@ const styles = StyleSheet.create(
       marginHorizontal:16,
     },
     scrollView: {
-      maxHeight: 405,
+      maxHeight: 430,
     },
     nearbyText: {
       fontFamily: "Montserrat-ExtraBold",
@@ -119,4 +115,4 @@ const styles = StyleSheet.create(
 
   });
 
-export default HomeScreen
+export default SearchScreen

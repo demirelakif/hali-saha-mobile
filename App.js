@@ -4,6 +4,8 @@ import 'react-native-gesture-handler';
 import StackNavigator from './src/navigators/StackNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
+import AnimTab1 from './src/navigators/TabNavigator';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -23,9 +25,11 @@ export default function App() {
   }
 
   return (
+    // <GestureHandlerRootView>
     <NavigationContainer>
       <StackNavigator />
     </NavigationContainer>
+    // </GestureHandlerRootView>
   );
 }
 
