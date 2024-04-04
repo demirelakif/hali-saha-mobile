@@ -1,6 +1,8 @@
-import { View, Text, Dimensions, StyleSheet } from 'react-native'
+import { View, Text, Dimensions, StyleSheet, Image } from 'react-native'
 import React from 'react'
 import BackButton from '../components/BackButton'
+import PitchCard from '../components/PitchCard'
+import { ScrollView } from 'react-native-gesture-handler'
 
 const HomeScreen = ({ navigation }) => {
 
@@ -21,9 +23,27 @@ const HomeScreen = ({ navigation }) => {
 
       <View style={styles.box}>
         <View style={styles.nearbyPitches}>
-          <Text style={styles.mainTextStyle}>
-            Yakındaki Sahalar
-          </Text>
+          <View style={styles.textAndImage}>
+            <View style={styles.boxText}>
+              <Text style={styles.nearbyText}>
+                Yakındaki
+              </Text>
+              <Text style={styles.nearbyText}>
+                Sahalar
+              </Text>
+            </View>
+            <Image style={styles.imageStyle} source={require('../assets/playerPng.png')}/>
+          </View>
+          <ScrollView style={styles.scrollView}>
+            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} onPress={() => { console.log("pressed") }} />
+            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} onPress={() => { console.log("pressed") }} />
+            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} onPress={() => { console.log("pressed") }} />
+            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} onPress={() => { console.log("pressed") }} />
+            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} onPress={() => { console.log("pressed") }} />
+            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} onPress={() => { console.log("pressed") }} />
+            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} onPress={() => { console.log("pressed") }} />
+            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} onPress={() => { console.log("pressed") }} />
+          </ScrollView>
         </View>
 
       </View>
@@ -39,7 +59,6 @@ const styles = StyleSheet.create(
   {
     main: {
       backgroundColor: "white",
-      flex: 1
     },
     backButton: {
       marginLeft: 24
@@ -57,20 +76,47 @@ const styles = StyleSheet.create(
       fontSize: 27,
       fontFamily: "Montserrat-ExtraBold",
       color: "#18191f",
-      textAlign: "center"
+      textAlign: "center",
     },
     box: {
-      justifyContent: "flex-end",
       borderRadius: 16,
-      boxShadow: "0px 4px 0px 0px #18191F",
-      borderColor: "rgba(24, 25, 31, 1)",
       borderStyle: "solid",
       borderWidth: 2,
-      backgroundColor: "#7FB77E",//textGreen
-      display: "flex",
-      maxWidth: 327,
+      borderBottomWidth:6,
+      backgroundColor: "#7FB77E",//textGreen,
+      marginTop: 16,
       flexDirection: "column",
+      marginHorizontal: 24,
+      maxHeight: 540,
+    },
+    nearbyPitches: {
+      fontSize: 27,
+      color: "#F7F6DC",
+      fontWeight: "800",
+      justifyContent: "space-between",
+      marginHorizontal:16,
+    },
+    scrollView: {
+      maxHeight: 392,
+    },
+    nearbyText: {
+      fontFamily: "Montserrat-ExtraBold",
+      color: "#F7F6DC",
+      fontSize: 27
+    },
+    textAndImage:{
+      flexDirection:'row',
+      alignItems:'center',
+      justifyContent:'space-between',
+      marginBottom: 24,
+      marginTop: 24,
+    },
+    imageStyle:{
+      maxWidth:80,
+      maxHeight:80,
+      tintColor:"#007109"
     }
+
   });
 
 export default HomeScreen
