@@ -5,6 +5,7 @@ import VertificationScreen from '../screens/VertificationScreen';
 import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
 import TabNavigator from './TabNavigator';
+import DetailScreen from '../screens/DetailScreen';
 
 
 const Stack = createStackNavigator();
@@ -16,7 +17,7 @@ const StackNavigator = () => {
       <Stack.Screen options={{headerShown:false}} name="Register" component={RegisterScreen} />
       <Stack.Screen options={{headerShown:false}} name="Vertification" component={VertificationScreen} /> */}
       {/* <Stack.Screen options={{headerShown:false}} name="Home" component={HomeScreen} /> */}
-      <Stack.Screen options={{headerShown:false}} name="BottomTab" component={TabNavigator} />
+      <Stack.Screen options={{headerShown:false}} name="Detail" component={DetailScreen} />
     </Stack.Navigator>
   );
 }
