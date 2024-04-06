@@ -4,6 +4,7 @@ import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ReservationScreen from '../screens/ReservationScreen';
+import DetailScreen from '../screens/DetailScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +22,8 @@ const TabNavigator = () => {
                     borderRadius: 15,
                     backgroundColor: "transparent",
                     borderColor: "white",
+                    borderWidth:0,
+                    borderTopWidth:0
                 }
 
             }}
@@ -156,7 +159,7 @@ options={
 }
 />
 
-            <Tab.Screen name="Profile" component={ProfileScreen}
+            <Tab.Screen name="Profile" component={DetailScreen}
 
                 options={
                     {

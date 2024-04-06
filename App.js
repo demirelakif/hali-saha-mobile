@@ -12,7 +12,8 @@ export default function App() {
     'Jomhuria-Regular': require('./assets/fonts/Jomhuria-Regular.ttf'),
     'Montserrat-ExtraBold': require('./assets/fonts/Montserrat-ExtraBold.ttf'),
     'Montserrat-Medium': require('./assets/fonts/Montserrat-Medium.ttf'),
-    'Montserrat-Bold': require('./assets/fonts/Montserrat-Bold.ttf')
+    'Montserrat-Bold': require('./assets/fonts/Montserrat-Bold.ttf'),
+    'Montserrat-SemiBold': require('./assets/fonts/Montserrat-SemiBold.ttf')
   });
 
   if (!fontsLoaded) {

@@ -59,6 +59,7 @@ const styles = StyleSheet.create(
   {
     main: {
       backgroundColor: "white",
+      flex:1
     },
     backButton: {
       marginLeft: 24
