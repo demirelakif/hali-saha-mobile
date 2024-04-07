@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { AntDesign, Ionicons, SimpleLineIcons } from '@expo/vector-icons'; // AntDesign kütüphanesini kullanarak yıldız ikonlarını ekliyoruz
 
-const PitchCard = ({ distance, rating, pitchName, onPress }) => {
+const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn }) => {
     // Yıldız ikonlarını oluşturmak için bir fonksiyon
     const renderStars = (rating) => {
         const stars = [];
@@ -33,10 +33,16 @@ const PitchCard = ({ distance, rating, pitchName, onPress }) => {
                         <Text style={styles.kmText}>km</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={onPress}>
-                    <Text style={styles.buttonText}>Devam et</Text>
-                    <AntDesign name="right" size={10} color="white" />
-                </TouchableOpacity>
+                {
+                !dontShowBtn ?
+                    <TouchableOpacity style={styles.button} onPress={onPress}>
+                        <Text style={styles.buttonText}>Devam et</Text>
+                        <AntDesign name="right" size={10} color="white" />
+                    </TouchableOpacity>
+                    :
+                    null
+                }
+
             </View>
         </View>
     );
@@ -61,24 +67,24 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop:6
+        marginTop: 6
     },
     starView: {
         flexDirection: 'row'
     },
-    textView:{
-        flexDirection:'row',
-        alignItems:'baseline'
+    textView: {
+        flexDirection: 'row',
+        alignItems: 'baseline'
     },
     distance: {
-        marginLeft:2,
-        fontFamily:"Montserrat-Medium",
-        fontSize:12
+        marginLeft: 2,
+        fontFamily: "Montserrat-Medium",
+        fontSize: 12
     },
-    kmText:{
-        marginLeft:0,
-        fontFamily:"Montserrat-Medium",
-        fontSize:8
+    kmText: {
+        marginLeft: 0,
+        fontFamily: "Montserrat-Medium",
+        fontSize: 8
     },
     distanceView: {
         flexDirection: 'row',

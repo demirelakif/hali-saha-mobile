@@ -114,7 +114,7 @@ const TabNavigator = () => {
                 }
             />
 
-<Tab.Screen name="ReservationScreen" component={ReservationScreen}
+<Tab.Screen name="ReservationScreen" component={DetailScreen}
 
 options={
     {
@@ -159,7 +159,7 @@ options={
 }
 />
 
-            <Tab.Screen name="Profile" component={DetailScreen}
+            <Tab.Screen name="Profile" component={ProfileScreen}
 
                 options={
                     {

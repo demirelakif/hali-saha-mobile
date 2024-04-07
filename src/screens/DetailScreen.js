@@ -15,6 +15,11 @@ const DetailScreen = () => {
     { type: 'roof', name: "Kapalı" },
     { type: 'drink', name: "İçecek" },
     { type: 'park', name: "Park Alanı" },
+    { type: 'shower', name: "Duş" },
+    { type: 'camera', name: "Duş" },
+    { type: 'park', name: "Park Alanı" },
+    { type: 'shower', name: "Duş" },
+    { type: 'camera', name: "Duş" },
     // Buraya istediğiniz kadar veri ekleyebilirsiniz
   ];
 
@@ -34,11 +39,13 @@ const DetailScreen = () => {
   };
 
   return (
-    <View style={styles.main}>
+    <ScrollView style={styles.main}>
       <ImageBackground
         source={require('../assets/image.png')}
         style={styles.image}
+
       >
+      <View style={styles.imageOverlay} />
         <View style={styles.backButton}>
           <BackButton onPress={goToLogin} icon={require('../assets/outlineBack.png')} />
         </View>
@@ -81,7 +88,7 @@ const DetailScreen = () => {
 
         <View style={styles.servicesContainer}>
           <Text style={styles.textSubHead}>Hizmetler</Text>
-          <ScrollView horizontal={true} style={{}} >
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ alignSelf: 'center', marginTop: 8 }} contentContainerStyle={{}}>
             {data.map((item, index) => (
               <View key={index} style={styles.itemContainer}>
                 <Image source={getImageByType(item.type)} style={styles.icon} />
@@ -90,8 +97,25 @@ const DetailScreen = () => {
             ))}
           </ScrollView>
         </View>
+
+        <View style={[styles.line, { marginTop: 28 }]} />
+
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.textSubHead}>Hakkında</Text>
+          <Text style={styles.descriptionText}>Lorem ipsum dolor amalet szymanski fred ismail dzeko tadic irfan</Text>
+        </View>
+
+        <View style={[styles.line, { marginTop: 28 }]} />
+
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.textSubHead}>İletişim</Text>
+          <View style={styles.locationIconAndText}>
+            <Image source={require("../assets/phone.png")} style={styles.icon} />
+            <Text style={styles.phoneText}>+90 536 212 09 85</Text>
+          </View>
+        </View>
       </View>
-    </View>
+    </ScrollView>
 
   )
 }
@@ -108,6 +132,10 @@ const styles = StyleSheet.create(
       marginTop: 54,
       marginLeft: 24,
     },
+    imageOverlay: {
+      ...StyleSheet.absoluteFillObject, // Ekranın tamamını kaplayacak
+      backgroundColor: 'rgba(0,0,0,0.5)', // Siyah ve %50 opaklıkta bir arka plan rengi
+    },
     textStyleMain: {
       color: '#F7F6DC',
       fontSize: 27,
@@ -117,10 +145,17 @@ const styles = StyleSheet.create(
     },
     image: {
       width: width,
+      minHeight:height/3
     },
     itemContainer: {
       flexDirection: 'column',
+      justifyContent: 'center', // Öğeleri dikey olarak ortala
+      marginRight: 23,
+      alignItems: 'center'
 
+    },
+    descriptionContainer: {
+      marginTop: 18
     },
     textAndPoint: {
       marginTop: 69,
@@ -149,9 +184,20 @@ const styles = StyleSheet.create(
       fontSize: 14,
       fontFamily: "Montserrat-Medium",
     },
-    servicesText:{
-      fontFamily:"Montserrat-Medium",
-      fontSize:10,
+    servicesText: {
+      fontFamily: "Montserrat-Medium",
+      fontSize: 10,
+      color: "white"
+    },
+    descriptionText: {
+      fontFamily: "Montserrat-Medium",
+      fontSize: 12,
+      color: "white",
+      marginTop: 6
+    },
+    phoneText:{
+      fontFamily: "Montserrat-ExtraBold",
+      fontSize:12,
       color:"white"
     },
     icon: {
@@ -207,7 +253,8 @@ const styles = StyleSheet.create(
     },
     servicesContainer: {
       marginTop: 18,
-      flexDirection: "column"
+      flexDirection: "column",
+
     }
   });
 
