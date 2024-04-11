@@ -7,6 +7,7 @@ import SearchScreen from '../screens/SearchScreen';
 import TabNavigator from './TabNavigator';
 import DetailScreen from '../screens/DetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import CalendarScreen from '../screens/CalendarScreen';
 
 
 const Stack = createStackNavigator();
@@ -19,7 +20,8 @@ const StackNavigator = () => {
       <Stack.Screen options={{headerShown:false}} name="Vertification" component={VertificationScreen} /> */}
       {/* <Stack.Screen options={{headerShown:false}} name="Home" component={HomeScreen} /> */}
       {/* <Stack.Screen options={{headerShown:false}} name="Profile" component={ProfileScreen} /> */}
-      <Stack.Screen options={{headerShown:false}} name="Stack" component={TabNavigator} />
+      {/* <Stack.Screen options={{headerShown:false}} name="Stack" component={TabNavigator} /> */}
+      <Stack.Screen options={{headerShown:false}} name="Stack" component={CalendarScreen} />
     </Stack.Navigator>
   );
 }

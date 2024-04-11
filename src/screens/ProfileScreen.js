@@ -42,12 +42,7 @@ const ProfileScreen = ({ navigation }) => {
             <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
             <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
             <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
-          </ScrollView>
+         </ScrollView>
         </View>
 
       </View>

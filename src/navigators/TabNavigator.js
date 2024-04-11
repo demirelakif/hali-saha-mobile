@@ -5,6 +5,7 @@ import SearchScreen from '../screens/SearchScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ReservationScreen from '../screens/ReservationScreen';
 import DetailScreen from '../screens/DetailScreen';
+import CalendarScreen from '../screens/CalendarScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -114,7 +115,7 @@ const TabNavigator = () => {
                 }
             />
 
-<Tab.Screen name="ReservationScreen" component={DetailScreen}
+<Tab.Screen name="CalendarScreen" component={CalendarScreen}
 
 options={
     {
