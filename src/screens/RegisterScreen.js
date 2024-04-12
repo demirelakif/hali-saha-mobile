@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, Keyboard } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import FormInputBox from '../components/FormInputBox'
 import Colors from '../constants/Colors'
@@ -7,13 +7,24 @@ import ButtonLarge from '../components/ButtonLarge'
 import { useNavigation } from '@react-navigation/native'
 import ButtonLargeOutline from '../components/ButtonLargeOutline'
 import BackButton from '../components/BackButton'
+import UserAuth from '../services/UserAuth'
 
 const RegisterScreen = ({navigation}) => {
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
+
     const handleScreenPress = () =>{
         Keyboard.dismiss()
     }
     const navigateToLogin = () =>{
         navigation.navigate("Login")
+    }
+    const handleRegister = async() =>{
+        const res = await UserAuth.signup(name,phoneNumber,password)
+        if(res){
+            navigateToLogin()
+        }
     }
     return (
         <KeyboardAvoidingView behavior='height' style={styles.main}>
@@ -26,16 +37,16 @@ const RegisterScreen = ({navigation}) => {
                         <Text style={styles.textStyle}>Kayıt Ol</Text>
                     </TouchableWithoutFeedback>
                     <View style={styles.nameLabel}>
-                        <FormInputBox icon={require("../assets/user.png")} placeholder={"İsim"} onChangeText={(text) => { console.log(text) }} />
+                        <FormInputBox icon={require("../assets/user.png")} placeholder={"İsim"} text={name} onChangeText={setName} />
                     </View>
                     <View style={styles.phoneLabel}>
-                        <FormInputBox icon={require("../assets/phone.png")} numeric={true} placeholder={"Telefon"} onChangeText={(text) => { console.log(text) }} />
+                        <FormInputBox icon={require("../assets/phone.png")} numeric={true} placeholder={"Telefon"} text={phoneNumber} onChangeText={setPhoneNumber} />
                     </View>
                     <View style={styles.passwordLabel}>
-                        <FormInputBox icon={require("../assets/lock.png")} placeholder={"Şifre"} onChangeText={(text) => { console.log(text) }} />
+                        <FormInputBox icon={require("../assets/lock.png")} placeholder={"Şifre"} text={password} onChangeText={setPassword} />
                     </View>
                     <View style={styles.buttonView}>
-                        <ButtonLargeOutline text={"Kayıt Ol"} />
+                        <ButtonLargeOutline text={"Kayıt Ol"} onpress={handleRegister} />
                     </View>
                     <TouchableOpacity style={styles.goRegisterView} onPress={navigateToLogin}>
                         <Text style={styles.yeniMisinKaytContainer}>

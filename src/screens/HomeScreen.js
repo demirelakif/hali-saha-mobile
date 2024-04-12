@@ -1,21 +1,31 @@
-import { View, Text, Dimensions, StyleSheet, Image } from 'react-native'
-import React from 'react'
-import BackButton from '../components/BackButton'
-import PitchCard from '../components/PitchCard'
-import { ScrollView } from 'react-native-gesture-handler'
+import React, { useEffect, useState } from 'react';
+import { View, Text, Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
+import PitchCard from '../components/PitchCard';
+import PitchServices from '../services/PitchServices';
 
 const HomeScreen = ({ navigation }) => {
+  const [pitches, setPitches] = useState([]);
 
-  const goToLogin = () => {
-    // navigation.navigate("Login")
-  }
+  useEffect(() => {
+    // Backend'den tüm sahaları al
+    const fetchPitches = async () => {
+      try {
+        const data = await PitchServices.getAllPitches();
+        setPitches(data);
+        // pitches.map((pitch)=>(
+        //   console.log(pitch)
+        // ))
+      } catch (error) {
+        console.log("Error fetching pitches:", error);
+      }
+    };
+
+    fetchPitches();
+  });
 
   return (
     <View style={styles.main}>
       <View style={styles.head}>
-        {/* <View style={styles.backButton}>
-          <BackButton onpress={goToLogin} icon={require('../assets/outlineBack.png')} />
-        </View> */}
         <View style={styles.headText}>
           <Text style={styles.headTextStyle}>Anasayfa</Text>
         </View>
@@ -32,43 +42,36 @@ const HomeScreen = ({ navigation }) => {
                 Sahalar
               </Text>
             </View>
-            <Image style={styles.imageStyle} source={require('../assets/playerPng.png')}/>
+            <Image style={styles.imageStyle} source={require('../assets/playerPng.png')} />
           </View>
           <ScrollView style={styles.scrollView}>
-            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} onPress={() => { console.log("pressed") }} />
+            {pitches.map((pitch, index) => (
+              <PitchCard
+                key={index}
+                pitchName={pitch.name}
+                distance={pitch.distance}
+                rating={pitch.rating}
+                onPress={() => { console.log("Pressed on:", pitch.pitchName) }}
+              />
+            ))}
           </ScrollView>
         </View>
-
       </View>
-
     </View>
-
-  )
+  );
 }
-
 
 const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create(
   {
     main: {
       backgroundColor: "white",
-      flex:1
-    },
-    backButton: {
-      marginLeft: 24
+      flex: 1
     },
     head: {
       flexDirection: 'row',
       marginTop: 54,
       alignItems: 'center',
-
     },
     headText: {
       marginLeft: 24
@@ -83,8 +86,8 @@ const styles = StyleSheet.create(
       borderRadius: 16,
       borderStyle: "solid",
       borderWidth: 2,
-      borderBottomWidth:6,
-      backgroundColor: "#7FB77E",//textGreen,
+      borderBottomWidth: 6,
+      backgroundColor: "#7FB77E", //textGreen,
       marginTop: 16,
       flexDirection: "column",
       marginHorizontal: 24,
@@ -95,7 +98,7 @@ const styles = StyleSheet.create(
       color: "#F7F6DC",
       fontWeight: "800",
       justifyContent: "space-between",
-      marginHorizontal:16,
+      marginHorizontal: 16,
     },
     scrollView: {
       maxHeight: 405,
@@ -105,19 +108,19 @@ const styles = StyleSheet.create(
       color: "#F7F6DC",
       fontSize: 27
     },
-    textAndImage:{
-      flexDirection:'row',
-      alignItems:'center',
-      justifyContent:'space-between',
+    textAndImage: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
       marginBottom: 24,
       marginTop: 24,
     },
-    imageStyle:{
-      maxWidth:80,
-      maxHeight:80,
-      tintColor:"#007109"
+    imageStyle: {
+      maxWidth: 80,
+      maxHeight: 80,
+      tintColor: "#007109"
     }
+  }
+);
 
-  });
-
-export default HomeScreen
+export default HomeScreen;

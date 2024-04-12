@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import AnimTab1 from './src/navigators/TabNavigator';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AuthProvider } from './src/context/AuthContext';
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -28,7 +29,9 @@ export default function App() {
   return (
     // <GestureHandlerRootView>
     <NavigationContainer>
-      <StackNavigator />
+      <AuthProvider>
+          <StackNavigator />
+      </AuthProvider>
     </NavigationContainer>
     // </GestureHandlerRootView>
   );

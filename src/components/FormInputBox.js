@@ -2,23 +2,19 @@ import React, { useState } from "react";
 import { StyleSheet, View, Image, Text, TextInput } from "react-native";
 import Colors from "../constants/Colors";
 
-const FormInputBox = ({ icon, placeholder, style, onChangeText, numeric }) => {
-  const [text, setText] = useState("");
-
+const FormInputBox = ({ icon, placeholder, style, onChangeText, numeric, text }) => {
   const handleChangeText = (inputText) => {
     let formattedText = inputText;
 
     if (numeric) {
       // Telefon numarası girişi için +90 ekleyin
-      if (!formattedText.startsWith("+90")) {
-        formattedText = "+90" + formattedText;
-      }
+      // if (!formattedText.startsWith("+90")) {
+      //   formattedText = "+90" + formattedText;
+      // }
 
       // Sadece 10 hane alın
-      formattedText = formattedText.slice(0, 13);
+      formattedText = formattedText.slice(0, 10);
     }
-
-    setText(formattedText);
 
     // Dışarıdan gelen onChangeText fonksiyonunu çağır
     if (onChangeText) {
