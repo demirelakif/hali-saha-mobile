@@ -2,26 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
 import PitchCard from '../components/PitchCard';
 import PitchServices from '../services/PitchServices';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 const HomeScreen = ({ navigation }) => {
   const [pitches, setPitches] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+
+  const fetchPitches = async () => {
+    try {
+      const data = await PitchServices.getAllPitches();
+      setPitches(data);  
+      setRefreshing(false) 
+    } catch (error) {
+      console.log("Error fetching pitches:", error);
+    } finally {
+      
+    }
+  };
+
 
   useEffect(() => {
-    // Backend'den tüm sahaları al
-    const fetchPitches = async () => {
-      try {
-        const data = await PitchServices.getAllPitches();
-        setPitches(data);
-        // pitches.map((pitch)=>(
-        //   console.log(pitch)
-        // ))
-      } catch (error) {
-        console.log("Error fetching pitches:", error);
-      }
-    };
-
     fetchPitches();
-  });
+  },[]);
 
   return (
     <View style={styles.main}>
@@ -44,7 +47,18 @@ const HomeScreen = ({ navigation }) => {
             </View>
             <Image style={styles.imageStyle} source={require('../assets/playerPng.png')} />
           </View>
-          <ScrollView style={styles.scrollView}>
+          <ScrollView
+            style={styles.scrollView}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  setRefreshing(true);
+                  fetchPitches();
+                }}
+              />
+            }
+          >
             {pitches.map((pitch, index) => (
               <PitchCard
                 key={index}
@@ -102,6 +116,7 @@ const styles = StyleSheet.create(
     },
     scrollView: {
       maxHeight: 405,
+      minHeight:400
     },
     nearbyText: {
       fontFamily: "Montserrat-ExtraBold",

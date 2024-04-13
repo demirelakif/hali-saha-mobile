@@ -29,6 +29,39 @@ class PitchServices {
       return [];
     }
   }
+  async searchPitchesByName(name) {
+    try {
+      const response = await axios.post(API_URL + "getPitchesByName", {
+        name
+      });
+      const pitches = response.data.pitches;
+
+      return pitches;
+    } catch (error) {
+      console.error("Sahalar aranırken bir hata oluştu:", error.response.data);
+      Alert.alert("Hata", "Sahalar aranırken bir hata oluştu.");
+      return [];
+    }
+  }
+
+
+  async getPitchById(id) {
+    try {
+      const response = await axios.post(API_URL + "getPitchById", {
+        id
+      });
+      const pitch = response.data.pitch;
+      
+
+      return pitch;
+    } catch (error) {
+      console.error("Sahalar aranırken bir hata oluştu:", error.response.data);
+      Alert.alert("Hata", "Sahalar aranırken bir hata oluştu.");
+      return [];
+    }
+  }
+
+
 }
 
 // Kullanıcı konumunu alma işlemini gerçekleştiren fonksiyon
@@ -52,15 +85,13 @@ async function getLocation() {
 
 // İki nokta arasındaki mesafeyi hesaplayan yardımcı fonksiyon
 function calculateDistance(location1, location2) {
-    const { lat: lat1, lng: lng1 } = location1;
-    const { lat: lat2, lng: lng2 } = location2;
-    console.log(lat1,lng1)
-    console.log(lat2,lng2)
-    // Hesaplama işlemini gerçekleştirin ve sonucu bir tam sayıya yuvarlayın
-    const distance = Math.round(Math.sqrt((lat2 - lat1) ** 2 + (lng2 - lng1) ** 2));
-    return distance;
-  }
-  
-  
+  const { lat: lat1, lng: lng1 } = location1;
+  const { lat: lat2, lng: lng2 } = location2;
+  // Hesaplama işlemini gerçekleştirin ve sonucu bir tam sayıya yuvarlayın
+  const distance = Math.round(Math.sqrt((lat2 - lat1) ** 2 + (lng2 - lng1) ** 2));
+  return distance;
+}
+
+
 
 export default new PitchServices();

@@ -1,12 +1,12 @@
 import * as React from "react";
-import {Image, StyleSheet, TouchableOpacity} from "react-native";
+import {Image, StyleSheet, TouchableOpacity, View} from "react-native";
 
-const ButtonMediumOutlineIc = ({icon,onpress}) => {
+const ButtonMediumOutlineIc = ({icon}) => {
   	
   	return (
-        <TouchableOpacity onPress={onpress}>
+        <View>
     		<Image style={styles.buttonMediumOutlineIc} resizeMode="cover" source={icon} />
-        </TouchableOpacity>
+        </View>
     )
 };
 

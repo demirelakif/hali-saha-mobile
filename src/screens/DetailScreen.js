@@ -1,27 +1,46 @@
-import React from 'react';
-import { View, Text, Dimensions, StyleSheet, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Dimensions, StyleSheet, Image, ImageBackground, TouchableOpacity, ScrollView, Linking } from 'react-native';
 import BackButton from '../components/BackButton';
 import StarRating from '../components/StarRating';
+import { useNavigation } from '@react-navigation/native';
+import PitchServices from '../services/PitchServices';
+import OwnerServices from '../services/OwnerServices';
 
-const DetailScreen = () => {
+const DetailScreen = ({ route }) => {
+  const navigation = useNavigation()
+  const [pitch, setPitch] = useState()
+  const [owner, setOwner] = useState()
 
-  const goToLogin = () => {
-    // navigation.navigate("Login")
+  const getPitch = async () => {
+    try {
+      const data = await PitchServices.getPitchById(route.params.pitchId);
+      setPitch(data);
+      await getOwner();
+    } catch (error) {
+      console.log("Error searching pitches:", error);
+    }
+  };
+
+  const getOwner = async () => {
+    try {
+      const data = await OwnerServices.getOwnerById(pitch.owner);
+      setOwner(data);
+      console.log(data)
+    } catch (error) {
+      console.log("Error searching Owner:", error);
+    }
+  };
+
+  useEffect(() => {
+    getPitch();
+    
+  }, []);
+
+
+
+  const goBack = () => {
+    navigation.goBack()
   }
-
-  const data = [
-    { type: 'shower', name: "Duş" },
-    { type: 'camera', name: "Duş" },
-    { type: 'roof', name: "Kapalı" },
-    { type: 'drink', name: "İçecek" },
-    { type: 'park', name: "Park Alanı" },
-    { type: 'shower', name: "Duş" },
-    { type: 'camera', name: "Duş" },
-    { type: 'park', name: "Park Alanı" },
-    { type: 'shower', name: "Duş" },
-    { type: 'camera', name: "Duş" },
-    // Buraya istediğiniz kadar veri ekleyebilirsiniz
-  ];
 
   const getImageByType = (type) => {
     switch (type) {
@@ -38,6 +57,80 @@ const DetailScreen = () => {
     }
   };
 
+  const renderServices = () => {
+    if (!pitch || !pitch.features) return null;
+
+    return Object.entries(pitch.features).map(([feature, value]) => {
+      if (value) {
+        let source;
+        let text;
+        switch (feature) {
+          case 'dus':
+            source = require('../assets/shower.png');
+            text = "Duş"
+            break;
+          case 'eldiven':
+            source = require('../assets/glove.png');
+            text = "Eldiven"
+            break;
+          case 'fileVarMi':
+            source = require('../assets/net.png');
+            text = "File"
+            break;
+          case 'icecekIkrami':
+            source = require('../assets/drink.png');
+            text = "İçecek\nServisi"
+            break;
+          case 'playground':
+            source = require('../assets/playground.png');
+            text = "Oyun\nAlanı"
+            break;
+          case 'tribun':
+            source = require('../assets/tribun.png');
+            text = "tribun"
+            break;
+          case 'parkAlani':
+            source = require('../assets/park.png');
+            text = "Park Alanı"
+            break;
+          case 'kapaliMi':
+            source = require('../assets/roof.png');
+            text = "Üstü\nKapalı"
+            break;
+          case 'kilitliDolap':
+            source = require('../assets/wardrobe.png');
+            text = "Dolap"
+            break;
+          case 'kramponHizmeti':
+            source = require('../assets/shoes.png');
+            text = "Krampon"
+            break;
+          // Diğer özellikler için aynı şekilde devam edebilirsiniz
+          default:
+            source = null;
+        }
+
+        if (source) {
+          return (
+            <View key={feature} style={styles.itemContainer}>
+              <Image source={source} style={[styles.icon,{marginRight:0,marginBottom:2}]} />
+              <Text style={[styles.servicesText,text.length > 6 && {textAlign:'center'}]}>{text}</Text>
+            </View>
+          );
+        }
+      }
+    });
+  };
+
+  const formatPhoneNumber = (phoneNumber) => {
+    return phoneNumber.replace(/(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4 $5");
+  };
+
+  const handlePhoneCall = () => {
+    console.log("asd")
+    Linking.openURL(`tel:${owner.phoneNumber}`);
+  };
+
   return (
     <ScrollView style={styles.main}>
       <ImageBackground
@@ -45,13 +138,13 @@ const DetailScreen = () => {
         style={styles.image}
 
       >
-      <View style={styles.imageOverlay} />
-        <View style={styles.backButton}>
-          <BackButton onPress={goToLogin} icon={require('../assets/outlineBack.png')} />
-        </View>
+        <View style={styles.imageOverlay} />
+        <TouchableOpacity style={styles.backButton} onPress={() => { goBack() }}>
+          <BackButton icon={require('../assets/outlineBack.png')} />
+        </TouchableOpacity>
         <View style={styles.textAndPoint}>
-          <Text style={styles.textStyleMain}>Varan Halı Saha Hizmetleri</Text>
-          <StarRating rating={3} />
+          <Text style={styles.textStyleMain}>{pitch ? pitch.name : ""}</Text>
+          <StarRating rating={pitch ? pitch.rating : 0} />
         </View>
       </ImageBackground>
       <View style={styles.bottomMainContainer}>
@@ -67,7 +160,7 @@ const DetailScreen = () => {
               <Text style={styles.textStyle}>Saatlere Göz At</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.reservationBtn}>
+          <TouchableOpacity style={styles.reservationBtn} onPress={() => { console.log("rez") }}>
             <Image source={require("../assets/reservation.png")} style={styles.icon} />
             <Text style={[styles.textStyle, { color: "black", marginLeft: 6 }]}>Rezervasyon Yap</Text>
           </TouchableOpacity>
@@ -79,7 +172,7 @@ const DetailScreen = () => {
           <Text style={styles.textSubHead}>Konum</Text>
           <View style={styles.locationIconAndText}>
             <Image source={require("../assets/location.png")} style={styles.icon} />
-            <Text style={styles.locationText}>Yenişehir, Şht. Kazım Sk. No:51, 41050 İzmit/Kocaeli</Text>
+            <Text style={styles.locationText}>{pitch ? pitch.location.name : ""}</Text>
             <Image source={require("../assets/map.png")} style={styles.map} />
           </View>
         </View>
@@ -89,12 +182,14 @@ const DetailScreen = () => {
         <View style={styles.servicesContainer}>
           <Text style={styles.textSubHead}>Hizmetler</Text>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ alignSelf: 'center', marginTop: 8 }} contentContainerStyle={{}}>
-            {data.map((item, index) => (
+
+            {renderServices()}
+            {/* {data.map((item, index) => (
               <View key={index} style={styles.itemContainer}>
                 <Image source={getImageByType(item.type)} style={styles.icon} />
                 <Text style={styles.servicesText}>{item.name}</Text>
               </View>
-            ))}
+            ))} */}
           </ScrollView>
         </View>
 
@@ -109,10 +204,10 @@ const DetailScreen = () => {
 
         <View style={styles.descriptionContainer}>
           <Text style={styles.textSubHead}>İletişim</Text>
-          <View style={styles.locationIconAndText}>
+          <TouchableOpacity style={styles.locationIconAndText} onPress={()=>{handlePhoneCall()}}>
             <Image source={require("../assets/phone.png")} style={styles.icon} />
-            <Text style={styles.phoneText}>+90 536 212 09 85</Text>
-          </View>
+            <Text style={styles.phoneText}>{owner ? formatPhoneNumber(owner.phoneNumber) : ""}</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -145,20 +240,20 @@ const styles = StyleSheet.create(
     },
     image: {
       width: width,
-      minHeight:height/3
+      minHeight: height / 3
     },
     itemContainer: {
       flexDirection: 'column',
-      justifyContent: 'center', // Öğeleri dikey olarak ortala
+      justifyContent: 'flex-start',
       marginRight: 23,
-      alignItems: 'center'
+      alignItems: 'center',
 
     },
     descriptionContainer: {
       marginTop: 18
     },
     textAndPoint: {
-      marginTop: 69,
+      marginTop: "auto",
       flexDirection: 'column',
       marginLeft: 24,
       marginBottom: 18
@@ -187,7 +282,7 @@ const styles = StyleSheet.create(
     servicesText: {
       fontFamily: "Montserrat-Medium",
       fontSize: 10,
-      color: "white"
+      color: "white",
     },
     descriptionText: {
       fontFamily: "Montserrat-Medium",
@@ -195,10 +290,10 @@ const styles = StyleSheet.create(
       color: "white",
       marginTop: 6
     },
-    phoneText:{
+    phoneText: {
       fontFamily: "Montserrat-ExtraBold",
-      fontSize:12,
-      color:"white"
+      fontSize: 12,
+      color: "white"
     },
     icon: {
       width: 24,

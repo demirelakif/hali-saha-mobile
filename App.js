@@ -7,7 +7,6 @@ import { useFonts } from 'expo-font';
 import AnimTab1 from './src/navigators/TabNavigator';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AuthProvider } from './src/context/AuthContext';
-
 export default function App() {
   let [fontsLoaded] = useFonts({
     'Jomhuria-Regular': require('./assets/fonts/Jomhuria-Regular.ttf'),

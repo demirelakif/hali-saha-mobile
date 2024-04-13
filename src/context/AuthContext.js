@@ -13,7 +13,10 @@ export const AuthProvider = ({ children }) => {
         const token = await readData("Token");
         if (!token) {
             setLoggedIn(false);
+        }else{
+            setLoggedIn(true)
         }
+        
     };
 
     // useEffect(()=>{
