@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Alert } from "react-native";
-import { saveData } from "../storage/AsyncStorageManager";
+import { readData, saveData } from "../storage/AsyncStorageManager";
 const API_URL = "http://192.168.1.104:5000/user/";
 class UserAuth {
   signin(phoneNumber, password) {
@@ -34,6 +34,18 @@ class UserAuth {
       })
 
   }
+
+  async checkUser() {
+    token = await readData("Token")
+    return axios
+      .get(API_URL + "checkUser", {headers:{"x-access-token":token}}).then((res)=>{
+        return true
+      }).catch((err)=>{
+        console.log("Check User Failed",err)
+        return false
+      })
+
+  }
   signup(name, phoneNumber, password) {
     console.log(name)
     return axios.post(API_URL + "signup", {
@@ -48,5 +60,16 @@ class UserAuth {
     })
       ;
   }
+
+
+  async getHistory () {
+    return axios.get(API_URL + "getHistory", {headers:{"x-access-token":token}}).then(async(res) => {
+      console.log(res.data)
+    }).catch((err) => {
+      console.log(err.response.data)
+    })
+      ;
+  }
+
 }
 export default new UserAuth();

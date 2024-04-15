@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { readData, removeData, saveData } from '../storage/AsyncStorageManager'; // AsyncStorageManager'daki uygun fonksiyonları kullanabilirsiniz
+import UserAuth from '../services/UserAuth';
 
 // AuthContext oluşturuluyor
 const AuthContext = createContext();
@@ -11,8 +12,11 @@ export const AuthProvider = ({ children }) => {
     // AsyncStorage'den token okuma işlevi
     const checkLoggedIn = async () => {
         const token = await readData("Token");
-        if (!token) {
+        const userFailed = await UserAuth.checkUser()
+        if (!token || !userFailed) {
+            console.log("girdi")
             setLoggedIn(false);
+            removeData("Token")
         }else{
             setLoggedIn(true)
         }

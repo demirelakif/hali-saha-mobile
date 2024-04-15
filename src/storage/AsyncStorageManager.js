@@ -15,7 +15,7 @@ const readData = async (key) => {
   try {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
-      console.log(`Data read from AsyncStorage with key ${key}:`, value);
+      // console.log(`Data read from AsyncStorage with key ${key}:`, value);
       return value;
     }
   } catch (error) {

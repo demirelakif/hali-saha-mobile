@@ -1,11 +1,31 @@
 import { View, Text, Dimensions, StyleSheet, Image, Keyboard } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import BackButton from '../components/BackButton'
 import PitchCard from '../components/PitchCard'
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import FormInputBox from '../components/FormInputBox'
+import PitchServices from '../services/PitchServices'
+import UserAuth from '../services/UserAuth'
+import { readData } from '../storage/AsyncStorageManager'
 
 const ProfileScreen = ({ navigation }) => {
+  const [history,setHistory] = useState(null);
+
+  const getHistory = async () => {
+    try {
+      // console.log(await readData("Token"))
+      const data = await UserAuth.getHistory();
+      setHistory(data);
+      
+      //console.log(data)
+    } catch (error) {
+      console.log("Error getting history:", error);
+    }
+  };
+
+  useEffect(() => {
+    getHistory();
+  }, []);
 
   const goToLogin = () => {
     // navigation.navigate("Login")

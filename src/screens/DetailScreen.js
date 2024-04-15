@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Dimensions, StyleSheet, Image, ImageBackground, TouchableOpacity, ScrollView, Linking } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, Image, ImageBackground, TouchableOpacity, ScrollView, Linking, ActivityIndicator } from 'react-native';
 import BackButton from '../components/BackButton';
 import StarRating from '../components/StarRating';
 import { useNavigation } from '@react-navigation/native';
@@ -8,14 +8,14 @@ import OwnerServices from '../services/OwnerServices';
 
 const DetailScreen = ({ route }) => {
   const navigation = useNavigation()
-  const [pitch, setPitch] = useState()
-  const [owner, setOwner] = useState()
+  const [pitch, setPitch] = useState(null)
+  const [owner, setOwner] = useState(null)
+  const [visible,setVisible] = useState(true)
 
   const getPitch = async () => {
     try {
       const data = await PitchServices.getPitchById(route.params.pitchId);
       setPitch(data);
-      await getOwner();
     } catch (error) {
       console.log("Error searching pitches:", error);
     }
@@ -25,7 +25,6 @@ const DetailScreen = ({ route }) => {
     try {
       const data = await OwnerServices.getOwnerById(pitch.owner);
       setOwner(data);
-      console.log(data)
     } catch (error) {
       console.log("Error searching Owner:", error);
     }
@@ -33,8 +32,13 @@ const DetailScreen = ({ route }) => {
 
   useEffect(() => {
     getPitch();
-    
   }, []);
+  
+  useEffect(() => {
+    if (pitch && pitch.owner) {
+      getOwner();
+    }
+  }, [pitch]);
 
 
 
@@ -127,11 +131,25 @@ const DetailScreen = ({ route }) => {
   };
 
   const handlePhoneCall = () => {
-    console.log("asd")
     Linking.openURL(`tel:${owner.phoneNumber}`);
   };
 
+
+  // Eğer pitch veya owner yüklenmediyse yüklenme göstergesi göster
+  if (!pitch || !owner) {
+    setTimeout(() => {
+      setVisible(false);
+    }, 200); // 1 saniye sonra loading indicator'ı kaldır
+  }
+
   return (
+    <>
+    {visible ?       
+      <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="black" />
+      </View>
+  :  
+
     <ScrollView style={styles.main}>
       <ImageBackground
         source={require('../assets/image.png')}
@@ -211,7 +229,7 @@ const DetailScreen = ({ route }) => {
         </View>
       </View>
     </ScrollView>
-
+}</>
   )
 }
 
@@ -222,6 +240,11 @@ const styles = StyleSheet.create(
       backgroundColor: "#7FB77E",
       width: width,
       height: height
+    },
+    loadingContainer:{
+      position:'absolute',
+      top:height/2,
+      right:width/2
     },
     backButton: {
       marginTop: 54,

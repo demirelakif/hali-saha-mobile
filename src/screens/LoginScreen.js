@@ -25,6 +25,7 @@ const LoginScreen = ({ navigation }) => {
     }
     const handleLogin = async() => {
         const token = await UserAuth.signin(phoneNumber,password)
+        console.log(token)
         if(token){
             checkLoggedIn();
             // navigation.navigate('Vertification')

@@ -26,6 +26,10 @@ const HomeScreen = ({ navigation }) => {
     fetchPitches();
   },[]);
 
+  const goToPitchDetail = (pitchId) => {
+    navigation.navigate('Detail', { pitchId }); // 'PitchDetail' isimli sayfaya pitchId parametresiyle yönlendiriyoruz
+  };
+
   return (
     <View style={styles.main}>
       <View style={styles.head}>
@@ -65,7 +69,7 @@ const HomeScreen = ({ navigation }) => {
                 pitchName={pitch.name}
                 distance={pitch.distance}
                 rating={pitch.rating}
-                onPress={() => { console.log("Pressed on:", pitch.pitchName) }}
+                onPress={() => { goToPitchDetail(pitch._id) }}
               />
             ))}
           </ScrollView>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Platform, Text, View, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,13 +6,33 @@ import { Dimensions, Image } from 'react-native'
 import BackButton from '../components/BackButton'
 import PitchCard from '../components/PitchCard'
 import { ScrollView } from 'react-native-gesture-handler'
+import PitchServices from '../services/PitchServices';
 
-const CalendarScreen = () => {
+const CalendarScreen = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [selectedHour, setSelectedHour] = useState(null);
   const [showHours, setShowHours] = useState(false);
   const [showFilter, setShowFilter] = useState(false); // Filtre penceresi gösterimi
+  const [pitches, setPitches] = useState(null)
+
+  const currentYear = new Date().getFullYear(); // Şu anki yıl
+  const maxDate = new Date(currentYear, 11, 31); // Şu anki yılın son günü
+
+  const getPitches = async () => {
+    try {
+      console.log(date,selectedHour)
+      const data = await PitchServices.getPitchByDate(selectedHour, date);
+      setPitches(data);
+    } catch (error) {
+      console.log("Error searching pitches:", error);
+    }
+  };
+
+  useEffect(() => {
+    getPitches();
+  }, [selectedHour, date]);
+
 
   const aylar = [
     "Ocak",
@@ -33,6 +53,7 @@ const CalendarScreen = () => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios'); // iOS'ta her zaman gösterilmez
     setDate(currentDate);
+    setShow(false)
   };
 
   const showDatePicker = () => {
@@ -89,6 +110,11 @@ const CalendarScreen = () => {
     }
   };
 
+
+  const goToPitchDetail = (pitchId) => {
+    navigation.navigate('Detail', { pitchId }); // 'PitchDetail' isimli sayfaya pitchId parametresiyle yönlendiriyoruz
+  };
+
   return (
     <View style={styles.main}>
       <View style={styles.head}>
@@ -117,6 +143,7 @@ const CalendarScreen = () => {
               transparent={true}
               onRequestClose={() => setShowFilter(false)}
             >
+
               <View style={styles.filterContainer}>
                 <View style={styles.filterContent}>
                   <TouchableOpacity style={styles.filterOption} onPress={filterByDistance}>
@@ -134,19 +161,41 @@ const CalendarScreen = () => {
           </View>
           <Text style={styles.dateText}>{getResult()}</Text>
           {showHours && <View style={styles.hoursContainer}>{renderHours()}</View>}
+          {show && (
+            <><View style={{ backgroundColor: "white", borderRadius: 16 }}>
+              <DateTimePicker
+                minimumDate={new Date()}
+                maximumDate={maxDate}
+                style={{}}
+                value={date}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'inline' : 'default'}
+                onChange={onChange} />
+            </View>
+            </>
+          )}
+          {pitches && !showHours ?
+            <ScrollView
+            style={styles.scrollView}
+            >
+
+              {pitches.map((pitch, index) => (
+                <PitchCard
+                  key={index}
+                  pitchName={pitch.name}
+                  distance={pitch.distance}
+                  rating={pitch.rating}
+                  onPress={() => { goToPitchDetail(pitch._id) }}
+                />
+              ))}
+            </ScrollView>
+            :
+            null
+          }
         </View>
       </View>
 
-      {show && (
-        <DateTimePicker
-          minimumDate={new Date()}
-          style={{ backgroundColor: 'black' }}
-          value={date}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={onChange}
-        />
-      )}
+
 
 
 
@@ -164,6 +213,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
+  scrollView: {
+    maxHeight: height/1.75,
+    minHeight:400
+  },
   hoursContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -178,7 +231,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
   },
   selectedHourButton: {
-    backgroundColor: 'blue',
+    backgroundColor: '#39473A',
   },
   hourText: {
     fontSize: 10,
@@ -260,7 +313,8 @@ const styles = StyleSheet.create({
   dateText: {
     fontFamily: "Montserrat-SemiBold",
     marginTop: 8,
-    color: "#F7F6DC"
+    color: "#F7F6DC",
+    marginBottom:6
   },
   textStyle: {
     color: '#F7F6DC',

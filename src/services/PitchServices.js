@@ -61,6 +61,23 @@ class PitchServices {
     }
   }
 
+  async getPitchByDate(hour,date) {
+    try {
+      const response = await axios.post(API_URL + "getPitchByDate", {
+        hour,
+        date
+      });
+      const pitches = response.data.filteredPitches;
+      
+
+      return pitches;
+    } catch (error) {
+      console.error("Sahalar aranırken bir hata oluştu:", error.response.data);
+      Alert.alert("Hata", "Sahalar aranırken bir hata oluştu.");
+      return [];
+    }
+  }
+
 
 }
 
