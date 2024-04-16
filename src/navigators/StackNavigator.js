@@ -11,6 +11,7 @@ import CalendarScreen from '../screens/CalendarScreen';
 import { useEffect, useState } from 'react';
 import { readData, removeData } from '../storage/AsyncStorageManager';
 import { useAuth } from '../context/AuthContext';
+import ReservationScreen from '../screens/ReservationScreen';
 
 
 const Stack = createStackNavigator();
@@ -32,9 +33,11 @@ const StackNavigator = () => {
           <>
           <Stack.Screen options={{ headerShown: false }} name="Stack" component={TabNavigator} />
           <Stack.Screen options={{ headerShown: false }} name="Detail" component={DetailScreen} />
+          <Stack.Screen options={{ headerShown: false }} name="Reservation" component={ReservationScreen} />
           </>
+          
       }
-      
+      {/* <Stack.Screen options={{ headerShown: false }} name="Detail" component={ReservationScreen} /> */}
       {/* <Stack.Screen options={{headerShown:false}} name="Home" component={HomeScreen} /> */}
       {/* <Stack.Screen options={{headerShown:false}} name="Profile" component={ProfileScreen} /> */}
 

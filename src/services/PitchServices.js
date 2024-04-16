@@ -2,6 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import * as Location from 'expo-location';
+import { readData } from "../storage/AsyncStorageManager";
 const API_URL = "http://192.168.1.104:5000/pitch/";
 
 class PitchServices {
@@ -51,7 +52,7 @@ class PitchServices {
         id
       });
       const pitch = response.data.pitch;
-      
+
 
       return pitch;
     } catch (error) {
@@ -61,14 +62,14 @@ class PitchServices {
     }
   }
 
-  async getPitchByDate(hour,date) {
+  async getPitchByDate(hour, date) {
     try {
       const response = await axios.post(API_URL + "getPitchByDate", {
         hour,
         date
       });
       const pitches = response.data.filteredPitches;
-      
+
 
       return pitches;
     } catch (error) {
@@ -78,8 +79,29 @@ class PitchServices {
     }
   }
 
+  async reservePitch(pitchId, date, start_time) {
+    const token = await readData("Token")
+    console.log(token)
+    try {
+      const response = await axios.post(
+        API_URL + "reservePitch",
+        { pitchId, date, start_time },
+        {
+          headers: { "x-access-token": token }
+        }
+      );
+      Alert.alert("Rezervasyon Başarılı:", `Saat: ${parseInt(start_time)} - ${parseInt(start_time)+1} arası rezerasyon talebiniz alındı.`);
+      return response.data;
+    } catch (error) {
+      console.log("Rezervasyon yaparken bir hata oluştu:", error.response.data.error);
+      Alert.alert("Rezervasyon yaparken bir hata oluştu:", error.response.data.error);
+      return [];
+    }
+  }
+
 
 }
+
 
 // Kullanıcı konumunu alma işlemini gerçekleştiren fonksiyon
 async function getLocation() {

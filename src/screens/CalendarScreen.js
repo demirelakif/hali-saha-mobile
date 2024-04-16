@@ -57,12 +57,13 @@ const CalendarScreen = ({navigation}) => {
   };
 
   const showDatePicker = () => {
-    setShow(true);
+    setShow(!show);
     setShowHours(false); // Saat seçimi görünümünü kapat
   };
 
   const showHourPicker = () => {
-    setShowHours(true); // Saat seçimi görünümünü aç
+    setShowHours(!showHours); // Saat seçimi görünümünü aç
+    setShow(false)
   };
 
   const selectHour = (hour) => {
@@ -174,7 +175,7 @@ const CalendarScreen = ({navigation}) => {
             </View>
             </>
           )}
-          {pitches && !showHours ?
+          {pitches && !showHours && !show ?
             <ScrollView
             style={styles.scrollView}
             >

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { AntDesign, Ionicons, SimpleLineIcons } from '@expo/vector-icons'; // AntDesign kütüphanesini kullanarak yıldız ikonlarını ekliyoruz
 
-const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn }) => {
+const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn, dontShowDist }) => {
     // Yıldız ikonlarını oluşturmak için bir fonksiyon
     const renderStars = (rating) => {
         const stars = [];
@@ -26,21 +26,28 @@ const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn }) => {
                 <View style={styles.starView}>
                     {renderStars(rating)}
                 </View>
-                <View style={styles.distanceView}>
-                    <SimpleLineIcons name="location-pin" size={16} color="black" />
-                    <View style={styles.textView}>
-                        <Text style={styles.distance}>{distance}</Text>
-                        <Text style={styles.kmText}>km</Text>
+
+                {!dontShowDist ?
+                    <View style={styles.distanceView}>
+                        <SimpleLineIcons name="location-pin" size={16} color="black" />
+
+                        <View style={styles.textView}>
+                            <Text style={styles.distance}>{distance}</Text>
+                            <Text style={styles.kmText}>km</Text>
+                        </View>
                     </View>
-                </View>
+                    : null
+                }
+
+
                 {
-                !dontShowBtn ?
-                    <TouchableOpacity style={styles.button} onPress={onPress}>
-                        <Text style={styles.buttonText}>Devam et</Text>
-                        <AntDesign name="right" size={10} color="white" />
-                    </TouchableOpacity>
-                    :
-                    null
+                    !dontShowBtn ?
+                        <TouchableOpacity style={styles.button} onPress={onPress}>
+                            <Text style={styles.buttonText}>Devam et</Text>
+                            <AntDesign name="right" size={10} color="white" />
+                        </TouchableOpacity>
+                        :
+                        null
                 }
 
             </View>

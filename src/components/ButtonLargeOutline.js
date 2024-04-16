@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
             height: 4
         },
         shadowRadius: 0,
+        borderBottomWidth:6,
         elevation: 3,
         shadowOpacity: 1,
         borderStyle: "solid",

@@ -63,6 +63,7 @@ class UserAuth {
 
 
   async getHistory () {
+    token = await readData("Token")
     return axios.get(API_URL + "getHistory", {headers:{"x-access-token":token}}).then(async(res) => {
       console.log(res.data)
     }).catch((err) => {

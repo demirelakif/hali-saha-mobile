@@ -10,7 +10,7 @@ const DetailScreen = ({ route }) => {
   const navigation = useNavigation()
   const [pitch, setPitch] = useState(null)
   const [owner, setOwner] = useState(null)
-  const [visible,setVisible] = useState(true)
+  const [visible, setVisible] = useState(true)
 
   const getPitch = async () => {
     try {
@@ -33,7 +33,7 @@ const DetailScreen = ({ route }) => {
   useEffect(() => {
     getPitch();
   }, []);
-  
+
   useEffect(() => {
     if (pitch && pitch.owner) {
       getOwner();
@@ -117,13 +117,17 @@ const DetailScreen = ({ route }) => {
         if (source) {
           return (
             <View key={feature} style={styles.itemContainer}>
-              <Image source={source} style={[styles.icon,{marginRight:0,marginBottom:2}]} />
-              <Text style={[styles.servicesText,text.length > 6 && {textAlign:'center'}]}>{text}</Text>
+              <Image source={source} style={[styles.icon, { marginRight: 0, marginBottom: 2 }]} />
+              <Text style={[styles.servicesText, text.length > 6 && { textAlign: 'center' }]}>{text}</Text>
             </View>
           );
         }
       }
     });
+  };
+
+  const goToReservation = (pitchId) => {
+    navigation.navigate('Reservation', { pitchId }); // 'PitchDetail' isimli sayfaya pitchId parametresiyle yönlendiriyoruz
   };
 
   const formatPhoneNumber = (phoneNumber) => {
@@ -144,92 +148,92 @@ const DetailScreen = ({ route }) => {
 
   return (
     <>
-    {visible ?       
-      <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color="black" />
-      </View>
-  :  
-
-    <ScrollView style={styles.main}>
-      <ImageBackground
-        source={require('../assets/image.png')}
-        style={styles.image}
-
-      >
-        <View style={styles.imageOverlay} />
-        <TouchableOpacity style={styles.backButton} onPress={() => { goBack() }}>
-          <BackButton icon={require('../assets/outlineBack.png')} />
-        </TouchableOpacity>
-        <View style={styles.textAndPoint}>
-          <Text style={styles.textStyleMain}>{pitch ? pitch.name : ""}</Text>
-          <StarRating rating={pitch ? pitch.rating : 0} />
+      {visible ?
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="black" />
         </View>
-      </ImageBackground>
-      <View style={styles.bottomMainContainer}>
+        :
 
-        <View style={styles.interactiveContainer}>
-          <View style={styles.interactiveContainerInside}>
-            <TouchableOpacity style={styles.textAndImageRow}>
-              <Image source={require("../assets/price.png")} style={styles.icon} />
-              <Text style={styles.textStyle}>Ücretlere Göz At</Text>
+        <ScrollView style={styles.main}>
+          <ImageBackground
+            source={require('../assets/image.png')}
+            style={styles.image}
+
+          >
+            <View style={styles.imageOverlay} />
+            <TouchableOpacity style={styles.backButton} onPress={() => { goBack() }}>
+              <BackButton icon={require('../assets/outlineBack.png')} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.textAndImageRow}>
-              <Image source={require("../assets/clock.png")} style={styles.icon} />
-              <Text style={styles.textStyle}>Saatlere Göz At</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity style={styles.reservationBtn} onPress={() => { console.log("rez") }}>
-            <Image source={require("../assets/reservation.png")} style={styles.icon} />
-            <Text style={[styles.textStyle, { color: "black", marginLeft: 6 }]}>Rezervasyon Yap</Text>
-          </TouchableOpacity>
-        </View>
+            <View style={styles.textAndPoint}>
+              <Text style={styles.textStyleMain}>{pitch ? pitch.name : ""}</Text>
+              <StarRating rating={pitch ? pitch.rating : 0} />
+            </View>
+          </ImageBackground>
+          <View style={styles.bottomMainContainer}>
 
-        <View style={styles.line} />
+            <View style={styles.interactiveContainer}>
+              <View style={styles.interactiveContainerInside}>
+                <TouchableOpacity style={styles.textAndImageRow}>
+                  <Image source={require("../assets/price.png")} style={styles.icon} />
+                  <Text style={styles.textStyle}>Ücretlere Göz At</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.textAndImageRow}>
+                  <Image source={require("../assets/clock.png")} style={styles.icon} />
+                  <Text style={styles.textStyle}>Saatlere Göz At</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity style={styles.reservationBtn} onPress={() => { goToReservation(pitch._id) }}>
+                <Image source={require("../assets/reservation.png")} style={styles.icon} />
+                <Text style={[styles.textStyle, { color: "black", marginLeft: 6 }]}>Rezervasyon Yap</Text>
+              </TouchableOpacity>
+            </View>
 
-        <View style={styles.locationContainer}>
-          <Text style={styles.textSubHead}>Konum</Text>
-          <View style={styles.locationIconAndText}>
-            <Image source={require("../assets/location.png")} style={styles.icon} />
-            <Text style={styles.locationText}>{pitch ? pitch.location.name : ""}</Text>
-            <Image source={require("../assets/map.png")} style={styles.map} />
-          </View>
-        </View>
+            <View style={styles.line} />
 
-        <View style={[styles.line, { marginTop: 28 }]} />
+            <View style={styles.locationContainer}>
+              <Text style={styles.textSubHead}>Konum</Text>
+              <View style={styles.locationIconAndText}>
+                <Image source={require("../assets/location.png")} style={styles.icon} />
+                <Text style={styles.locationText}>{pitch ? pitch.location.name : ""}</Text>
+                <Image source={require("../assets/map.png")} style={styles.map} />
+              </View>
+            </View>
 
-        <View style={styles.servicesContainer}>
-          <Text style={styles.textSubHead}>Hizmetler</Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ alignSelf: 'center', marginTop: 8 }} contentContainerStyle={{}}>
+            <View style={[styles.line, { marginTop: 28 }]} />
 
-            {renderServices()}
-            {/* {data.map((item, index) => (
+            <View style={styles.servicesContainer}>
+              <Text style={styles.textSubHead}>Hizmetler</Text>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ alignSelf: 'center', marginTop: 8 }} contentContainerStyle={{}}>
+
+                {renderServices()}
+                {/* {data.map((item, index) => (
               <View key={index} style={styles.itemContainer}>
                 <Image source={getImageByType(item.type)} style={styles.icon} />
                 <Text style={styles.servicesText}>{item.name}</Text>
               </View>
             ))} */}
-          </ScrollView>
-        </View>
+              </ScrollView>
+            </View>
 
-        <View style={[styles.line, { marginTop: 28 }]} />
+            <View style={[styles.line, { marginTop: 28 }]} />
 
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.textSubHead}>Hakkında</Text>
-          <Text style={styles.descriptionText}>Lorem ipsum dolor amalet szymanski fred ismail dzeko tadic irfan</Text>
-        </View>
+            <View style={styles.descriptionContainer}>
+              <Text style={styles.textSubHead}>Hakkında</Text>
+              <Text style={styles.descriptionText}>Lorem ipsum dolor amalet szymanski fred ismail dzeko tadic irfan</Text>
+            </View>
 
-        <View style={[styles.line, { marginTop: 28 }]} />
+            <View style={[styles.line, { marginTop: 28 }]} />
 
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.textSubHead}>İletişim</Text>
-          <TouchableOpacity style={styles.locationIconAndText} onPress={()=>{handlePhoneCall()}}>
-            <Image source={require("../assets/phone.png")} style={styles.icon} />
-            <Text style={styles.phoneText}>{owner ? formatPhoneNumber(owner.phoneNumber) : ""}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
-}</>
+            <View style={styles.descriptionContainer}>
+              <Text style={styles.textSubHead}>İletişim</Text>
+              <TouchableOpacity style={styles.locationIconAndText} onPress={() => { handlePhoneCall() }}>
+                <Image source={require("../assets/phone.png")} style={styles.icon} />
+                <Text style={styles.phoneText}>{owner ? formatPhoneNumber(owner.phoneNumber) : ""}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      }</>
   )
 }
 
@@ -241,10 +245,10 @@ const styles = StyleSheet.create(
       width: width,
       height: height
     },
-    loadingContainer:{
-      position:'absolute',
-      top:height/2,
-      right:width/2
+    loadingContainer: {
+      position: 'absolute',
+      top: height / 2,
+      right: width / 2
     },
     backButton: {
       marginTop: 54,
