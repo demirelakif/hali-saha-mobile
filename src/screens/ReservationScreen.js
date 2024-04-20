@@ -60,16 +60,19 @@ const ReservationScreen = ({ route }) => {
     setShow(Platform.OS === 'ios'); // iOS'ta her zaman gösterilmez
     setDate(currentDate);
     setShow(false)
+    setShowHours(true)
+    getPitch()
   };
 
   const showDatePicker = () => {
+    setShowHours(false)
     setShow(true);
   };
 
   const handleReservation = () => {
     const selectedHourStart = selectedHour.toString().padStart(2, '0');
-    console.log(pitch._id,date,selectedHourStart)
-    PitchServices.reservePitch(pitch._id,date,selectedHourStart)
+    console.log(pitch._id, date, selectedHourStart)
+    PitchServices.reservePitch(pitch._id, date, selectedHourStart)
   }
 
   const getResult = () => {
@@ -85,6 +88,15 @@ const ReservationScreen = ({ route }) => {
 
   const renderHours = () => {
     const hours = [];
+    const reservationHours = []
+    if (pitch) {
+      const reservations = pitch.reservations;
+      reservations.map((reservation) => {
+        if (new Date(reservation.date).getMonth() == new Date(date).getMonth() && new Date(reservation.date).getDay() == new Date(date).getDay()) {
+          reservationHours.push(reservation.start_time)
+        }
+      })
+    }
     for (let i = 0; i < 24; i++) {
       const hourStart = i.toString().padStart(2, '0');
       const hourEnd = (i + 1).toString().padStart(2, '0');
@@ -92,10 +104,10 @@ const ReservationScreen = ({ route }) => {
       hours.push(
         <TouchableOpacity
           key={i}
-          style={[styles.hourButton, selectedHour === i ? styles.selectedHourButton : null]}
+          style={[reservationHours.includes(i) ? styles.reservedHourContainer : styles.hourButton, selectedHour === i ? styles.selectedHourButton : null]}
           onPress={() => selectHour(i)}
         >
-          <Text style={selectedHour === i ? styles.selectedHourText : styles.hourText}>{hourRange}</Text>
+          <Text style={reservationHours.includes(i) ? styles.reservedHourText : selectedHour === i ? styles.selectedHourText : styles.hourText}>{hourRange}</Text>
         </TouchableOpacity>
       );
     }
@@ -146,7 +158,7 @@ const ReservationScreen = ({ route }) => {
           )}
         </View>
 
-        <View style={{marginTop:28}}>
+        <View style={{ marginTop: 28 }}>
           <ButtonLargeOutline onpress={handleReservation} text={"Rezerasyon Yap"}></ButtonLargeOutline>
         </View>
       </View>
@@ -191,6 +203,13 @@ const styles = StyleSheet.create({
   selectedHourButton: {
     backgroundColor: '#39473A',
   },
+  reservedHourContainer: {
+    backgroundColor: "#ff3333",
+    paddingHorizontal: 4,
+    paddingVertical: 10,
+    borderRadius: 16,
+    marginTop: 8,
+  },
   hourText: {
     fontSize: 10,
   },
@@ -198,9 +217,18 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: 'white',
   },
+  reservedHourText: {
+    fontSize: 10,
+    color: 'white',
+  },
   resultText: {
     marginTop: 20,
     textAlign: 'center',
+  },
+  textStyle: {
+    color: '#F7F6DC',
+    fontSize: 14,
+    fontFamily: "Montserrat-Medium",
   },
   main: {
     backgroundColor: "#7FB77E",
@@ -226,6 +254,7 @@ const styles = StyleSheet.create({
   },
   reservationBtn: {
     alignSelf: 'baseline',
+    alignItems: 'center',
     flexDirection: 'row',
     backgroundColor: "#B1D7B4",
     borderRadius: 16,

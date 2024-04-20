@@ -58,10 +58,11 @@ const ProfileScreen = ({ navigation }) => {
                 </View>
             </View>
           </View>
+          <Text style={styles.historyText}>Geçmiş</Text>
           <ScrollView style={styles.scrollView}>
-            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Acarlar Halısaha"} distance={24} rating={4} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Rampalı Halısaha"} distance={32} rating={2} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
+            <PitchCard pitchName={"Rampalı Halısaha"} dontShowDist={1} status={"İstek Gönderildi"} rating={2}  onPress={() => { console.log("pressed") }} />
+            <PitchCard pitchName={"Acarlar Halısaha"} dontShowDist={1} status={"Tamamlandı"}  rating={4} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
+            <PitchCard pitchName={"Rampalı Halısaha"} dontShowDist={1} status={"Kabul Edildi"} rating={2} dontShowBtn={true} onPress={() => { console.log("pressed") }} />
          </ScrollView>
         </View>
 
@@ -96,6 +97,11 @@ const styles = StyleSheet.create(
     },
     nameAndId:{
       marginLeft:12,
+    },
+    historyText:{
+      fontFamily:"Montserrat-Bold",
+      fontSize:20,
+      marginBottom:12
     },
     nameText:{
       fontFamily:"Montserrat-Medium",

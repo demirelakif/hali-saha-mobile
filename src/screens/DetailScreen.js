@@ -130,6 +130,11 @@ const DetailScreen = ({ route }) => {
     navigation.navigate('Reservation', { pitchId }); // 'PitchDetail' isimli sayfaya pitchId parametresiyle yönlendiriyoruz
   };
 
+  const goToHours = (pitchId) => {
+    navigation.navigate('Hours', { pitchId }); // 'PitchDetail' isimli sayfaya pitchId parametresiyle yönlendiriyoruz
+  };
+  
+
   const formatPhoneNumber = (phoneNumber) => {
     return phoneNumber.replace(/(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4 $5");
   };
@@ -177,7 +182,7 @@ const DetailScreen = ({ route }) => {
                   <Image source={require("../assets/price.png")} style={styles.icon} />
                   <Text style={styles.textStyle}>Ücretlere Göz At</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.textAndImageRow}>
+                <TouchableOpacity style={styles.textAndImageRow} onPress={() => { goToHours(pitch._id) }}>
                   <Image source={require("../assets/clock.png")} style={styles.icon} />
                   <Text style={styles.textStyle}>Saatlere Göz At</Text>
                 </TouchableOpacity>

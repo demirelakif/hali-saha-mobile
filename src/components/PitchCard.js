@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { AntDesign, Ionicons, SimpleLineIcons } from '@expo/vector-icons'; // AntDesign kütüphanesini kullanarak yıldız ikonlarını ekliyoruz
 
-const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn, dontShowDist }) => {
+const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn, dontShowDist, status }) => {
     // Yıldız ikonlarını oluşturmak için bir fonksiyon
     const renderStars = (rating) => {
         const stars = [];
@@ -36,14 +36,21 @@ const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn, dontShow
                             <Text style={styles.kmText}>km</Text>
                         </View>
                     </View>
-                    : null
+                    : status ? 
+                    <View style={styles.distanceView}>
+                        <View style={styles.textView}>
+                            <Text style={styles.distance}>{status}</Text>
+                        </View>
+                    </View>
+                    : 
+                    null
                 }
 
 
                 {
                     !dontShowBtn ?
                         <TouchableOpacity style={styles.button} onPress={onPress}>
-                            <Text style={styles.buttonText}>Devam et</Text>
+                            <Text style={styles.buttonText}>{status == "İstek Gönderildi" ? "İptal Et" : "Devam et"}</Text>
                             <AntDesign name="right" size={10} color="white" />
                         </TouchableOpacity>
                         :
