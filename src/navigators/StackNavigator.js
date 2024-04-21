@@ -13,6 +13,7 @@ import { readData, removeData } from '../storage/AsyncStorageManager';
 import { useAuth } from '../context/AuthContext';
 import ReservationScreen from '../screens/ReservationScreen';
 import HoursScreen from '../screens/HoursScreen';
+import AddPitchScreen from '../screens/AddPitchScreen';
 
 
 const Stack = createStackNavigator();
@@ -24,7 +25,7 @@ const StackNavigator = () => {
   },[])
   return (
     <Stack.Navigator>
-      {
+      {/* {
         !loggedIn ?
           <>
             <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
@@ -38,9 +39,10 @@ const StackNavigator = () => {
           <Stack.Screen options={{ headerShown: false }} name="Hours" component={HoursScreen} />
           </>
           
-      }
+      } */}
+
       
-      {/* <Stack.Screen options={{headerShown:false}} name="Home" component={HomeScreen} /> */}
+      <Stack.Screen options={{headerShown:false}} name="Home" component={AddPitchScreen} />
       {/* <Stack.Screen options={{headerShown:false}} name="Profile" component={ProfileScreen} /> */}
 
       {/* <Stack.Screen options={{headerShown:false}} name="Stack" component={CalendarScreen} /> */}
