@@ -62,7 +62,7 @@ const AddPitchScreen = () => {
                 </View>
             </View>
 
-            <ScrollView style={styles.bottomContainer}>
+            <View style={styles.bottomContainer}>
                 <FormInputBox placeholder={"Saha İsmi"} text={pitchName} onChangeText={setPitchName} />
                 <View style={styles.selectServicesContainer}>
                     <Text style={styles.textSubHead}>Hizmet Ekle</Text>
@@ -74,7 +74,7 @@ const AddPitchScreen = () => {
                     />
                 </View>
                 <ButtonLarge text={"Ekle"} onPress={()=>{console.log(selectedFeatures)}}/>
-            </ScrollView>
+            </View>
         </View>
     )
 }
@@ -111,7 +111,8 @@ const styles = StyleSheet.create({
         marginTop: 18
     },
     selectServicesContainer: {
-        marginTop:18
+        marginTop:18,
+        marginBottom:18
     },
     textSubHead: {
         fontFamily: "Montserrat-ExtraBold",

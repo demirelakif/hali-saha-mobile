@@ -14,6 +14,8 @@ import { useAuth } from '../context/AuthContext';
 import ReservationScreen from '../screens/ReservationScreen';
 import HoursScreen from '../screens/HoursScreen';
 import AddPitchScreen from '../screens/AddPitchScreen';
+import RequestsScreen from '../screens/RequestsScreen';
+import OwnerCalendarScreen from '../screens/OwnerCalendarScreen'
 
 
 const Stack = createStackNavigator();
@@ -42,7 +44,7 @@ const StackNavigator = () => {
       } */}
 
       
-      <Stack.Screen options={{headerShown:false}} name="Home" component={AddPitchScreen} />
+      <Stack.Screen options={{headerShown:false}} name="Home" component={OwnerCalendarScreen} />
       {/* <Stack.Screen options={{headerShown:false}} name="Profile" component={ProfileScreen} /> */}
 
       {/* <Stack.Screen options={{headerShown:false}} name="Stack" component={CalendarScreen} /> */}
