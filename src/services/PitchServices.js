@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import * as Location from 'expo-location';
 import { readData } from "../storage/AsyncStorageManager";
-const API_URL = "http://192.168.1.104:5000/pitch/";
+const API_URL = "http://192.168.1.105:5000/pitch/";
 
 class PitchServices {
   async getAllPitches() {

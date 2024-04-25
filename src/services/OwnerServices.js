@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Alert } from "react-native";
-import { saveData } from "../storage/AsyncStorageManager";
-const API_URL = "http://192.168.1.104:5000/owner/";
+import { readData, saveData } from "../storage/AsyncStorageManager";
+const API_URL = "http://192.168.1.105:5000/owner/";
 class OwnerServices {
   signin(phoneNumber, password) {
     return axios
@@ -34,6 +34,18 @@ class OwnerServices {
       })
 
   }
+  async checkOwner() {
+    token = await readData("Token")
+    return axios
+      .get(API_URL + "checkOwner", {headers:{"x-access-token":token}}).then((res)=>{
+        return true
+      }).catch((err)=>{
+        console.log("Check Owner Failed",err)
+        return false
+      })
+
+  }
+
   signup(name, phoneNumber, password) {
     console.log(name)
     return axios.post(API_URL + "signup", {

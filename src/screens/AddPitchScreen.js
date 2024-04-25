@@ -4,7 +4,7 @@ import BackButton from '../components/BackButton';
 import FormInputBox from '../components/FormInputBox';
 import { ScrollView } from 'react-native-gesture-handler';
 import ButtonLarge from '../components/ButtonLarge';
-
+import { useNavigation } from '@react-navigation/native';
 
 const features = [
     { key: 'dus', image: require('../assets/shower.png'), text: 'Duş' },
@@ -21,9 +21,13 @@ const features = [
 
 const AddPitchScreen = () => {
     const [pitchName, setPitchName] = useState(null)
-
+    const navigation = useNavigation()
 
     const [selectedFeatures, setSelectedFeatures] = useState([]);
+
+    const goBack = () => {
+        navigation.goBack()
+    }
 
     // Özelliği seçmek için bir işlev
     const toggleFeature = (feature) => {

@@ -10,8 +10,9 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorageManager, { saveData, saveSecureData } from '../storage/AsyncStorageManager';
 import UserAuth from '../services/UserAuth';
 import { useAuth } from '../context/AuthContext';
+import OwnerServices from '../services/OwnerServices';
 
-const LoginScreen = ({ navigation }) => {
+const OwnerLoginScreen = ({ navigation }) => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
 
@@ -20,15 +21,15 @@ const LoginScreen = ({ navigation }) => {
         Keyboard.dismiss()
     }
     const goToRegister = async () => {
-        navigation.navigate("Register")
+        navigation.navigate("OwnerRegister")
 
     }
 
-    const goToOwnerLogin = async () => {
-        navigation.navigate("OwnerLogin")
+    const goToLogin = async () => {
+        navigation.navigate("Login")
     }
     const handleLogin = async() => {
-        const token = await UserAuth.signin(phoneNumber,password)
+        const token = await OwnerServices.signin(phoneNumber,password)
         console.log(token)
         if(token){
             checkLoggedIn();
@@ -44,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
                 </TouchableWithoutFeedback>
                 <View style={styles.loginForm}>
                     <TouchableWithoutFeedback style={styles.formText} onPress={handleScreenPress}>
-                        <Text style={styles.textStyle}>Giriş Yap</Text>
+                        <Text style={styles.textStyle}>Saha Sahibi Giriş</Text>
                     </TouchableWithoutFeedback>
                     <View style={styles.phoneLabel}>
                         <FormInputBox
@@ -76,9 +77,9 @@ const LoginScreen = ({ navigation }) => {
                             <Text style={styles.kaytOl}>Kayıt ol</Text>
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.goRegisterView} onPress={goToOwnerLogin}>
+                    <TouchableOpacity style={styles.goRegisterView} onPress={goToLogin}>
                         <Text style={{flexDirection:'row'}}>
-                            <Text style={styles.kaytOl}>Saha Sahibi Giriş</Text>
+                            <Text style={styles.kaytOl}>Kullanıcı Giriş</Text>
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -165,4 +166,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default LoginScreen
+export default OwnerLoginScreen

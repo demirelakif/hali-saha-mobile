@@ -155,6 +155,14 @@ const OwnerCalendarScreen = () => {
                     </View>
                     </>
                 )}
+                <View style={styles.buttons}>
+                    <TouchableOpacity style={styles.acceptButton} onPress={{}}>
+                        <Image source={require("../assets/tick.png")} style={[styles.icon,{tintColor:"green"}]} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.acceptButton,{marginLeft:18}]} onPress={{}}>
+                        <Image source={require("../assets/x.png")} style={[styles.icon,{tintColor:"red"}]} />
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     )
@@ -176,6 +184,11 @@ const styles = StyleSheet.create({
         marginTop: 54,
         alignItems: 'center',
 
+    },
+    buttons:{
+        marginTop:18,
+        flexDirection:'row',
+        justifyContent:'flex-end'
     },
     headText: {
         marginLeft: 24
@@ -208,6 +221,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 4,
         marginBottom: 6
+    },
+    acceptButton:{
+        alignItems:'center',
     },
     textStyle: {
         color: '#F7F6DC',
