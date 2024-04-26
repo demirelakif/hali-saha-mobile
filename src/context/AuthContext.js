@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }) => {
                 console.log("Herhangi biri giriş yapmamış");
                 setLoggedIn(false);  // User logged out
                 setOwnerLoggedIn(false);  // Owner logged out
+                removeData("Token")
             }
         }
     };

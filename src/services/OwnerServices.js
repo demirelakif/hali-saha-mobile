@@ -76,5 +76,37 @@ class OwnerServices {
       return [];
     }
   }
+
+  async getAllOwners() {
+    try {
+      const response = await axios.get(API_URL + "getAllOwners");
+      const owners = response.data.owners;
+      
+
+      return owners;
+    } catch (error) {
+      console.error("Owner aranırken bir hata oluştu:", error.response.data);
+      Alert.alert("Hata", "Owner aranırken bir hata oluştu.");
+      return [];
+    }
+  }
+
+
+  async searchOwnersByName(name) {
+    try {
+      const response = await axios.post(API_URL + "getOwnersByName", {
+        name
+      });
+      const owners = response.data.owners;
+
+      return owners;
+    } catch (error) {
+      console.error("Owners aranırken bir hata oluştu:", error.response.data);
+      Alert.alert("Hata", "Sahalar aranırken bir hata oluştu.");
+      return [];
+    }
+  }
 }
+
+
 export default new OwnerServices();

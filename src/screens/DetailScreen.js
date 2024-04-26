@@ -5,46 +5,100 @@ import StarRating from '../components/StarRating';
 import { useNavigation } from '@react-navigation/native';
 import PitchServices from '../services/PitchServices';
 import OwnerServices from '../services/OwnerServices';
+import { Dropdown } from 'react-native-element-dropdown';
 
 const DetailScreen = ({ route }) => {
   const navigation = useNavigation()
-  const [pitch, setPitch] = useState(null)
   const [owner, setOwner] = useState(null)
   const [visible, setVisible] = useState(true)
-
-  const getPitch = async () => {
-    try {
-      const data = await PitchServices.getPitchById(route.params.pitchId);
-      setPitch(data);
-    } catch (error) {
-      console.log("Error searching pitches:", error);
-    }
-  };
+  const [value, setValue] = useState(null);
+  const [showedPitch, setShowedPitch] = useState(null)
+  const [pitches, setPitches] = useState([])
 
   const getOwner = async () => {
     try {
-      const data = await OwnerServices.getOwnerById(pitch.owner);
+      const data = await OwnerServices.getOwnerById(route.params.pitchId);
       setOwner(data);
     } catch (error) {
       console.log("Error searching Owner:", error);
     }
   };
 
+  const getPitch = async (id) => {
+    try {
+      const data = await PitchServices.getPitchById(id);
+      setShowedPitch(data)
+      setValue(data._id)
+    } catch (error) {
+      console.log("Error searching Owner:", error);
+    }
+  };
+
+  const getPitches = async (id) => {
+    try {
+      const data = await PitchServices.getPitchById(id);
+
+      // Pitch zaten dizideyse eklemeyi önlemek için kontrol
+      setPitches((prevPitches) => {
+        const pitchExists = prevPitches.some((pitch) => pitch._id === data._id);
+
+        if (!pitchExists) {
+          // Saha henüz mevcut değilse, ekle
+          return prevPitches.concat(data);
+        } else {
+          // Saha zaten varsa, önceki diziyi döndür
+          return prevPitches;
+        }
+      });
+    } catch (error) {
+      console.log("Error searching Owner:", error);
+    }
+  };
+
   useEffect(() => {
-    getPitch();
+    if (!route.params.selectedPitch && owner) {
+      getPitch(owner.pitches[0])
+    } else {
+      getPitch(route.params.selectedPitch)
+    }
+
+  }, [owner])
+
+
+  useEffect(() => {
+    if (owner && owner.pitches) {
+      owner.pitches.forEach((pitch) => {
+        getPitches(pitch);
+      });
+    }
+  }, [owner]);
+
+  useEffect(() => {
+    getOwner();
+
   }, []);
 
-  useEffect(() => {
-    if (pitch && pitch.owner) {
-      getOwner();
-    }
-  }, [pitch]);
+  // useEffect(() => {
+  //   if (pitches) {
+  //     const pitchWithId = pitches.find(pitch => pitch._id === value)
+  //     setShowedPitch(pitchWithId)
+  //   }
 
+  // }, [value, pitches])
 
 
   const goBack = () => {
     navigation.goBack()
   }
+
+  const generateDropdownData = (pitches) => {
+    return pitches.map((pitch) => {
+      return {
+        label: pitch.name,
+        value: pitch._id, // Benzersiz bir tanımlayıcı kullanılabilir
+      };
+    });
+  };
 
   const getImageByType = (type) => {
     switch (type) {
@@ -62,9 +116,9 @@ const DetailScreen = ({ route }) => {
   };
 
   const renderServices = () => {
-    if (!pitch || !pitch.features) return null;
+    if (!showedPitch || !showedPitch.features) return null;
 
-    return Object.entries(pitch.features).map(([feature, value]) => {
+    return Object.entries(showedPitch.features).map(([feature, value]) => {
       if (value) {
         let source;
         let text;
@@ -133,10 +187,10 @@ const DetailScreen = ({ route }) => {
   const goToHours = (pitchId) => {
     navigation.navigate('Hours', { pitchId }); // 'PitchDetail' isimli sayfaya pitchId parametresiyle yönlendiriyoruz
   };
-  
+
 
   const formatPhoneNumber = (phoneNumber) => {
-    return phoneNumber.replace(/(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4 $5");
+    return phoneNumber.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, "$1 $2 $3 $4");
   };
 
   const handlePhoneCall = () => {
@@ -145,7 +199,7 @@ const DetailScreen = ({ route }) => {
 
 
   // Eğer pitch veya owner yüklenmediyse yüklenme göstergesi göster
-  if (!pitch || !owner) {
+  if (!owner || !showedPitch) {
     setTimeout(() => {
       setVisible(false);
     }, 200); // 1 saniye sonra loading indicator'ı kaldır
@@ -170,8 +224,28 @@ const DetailScreen = ({ route }) => {
               <BackButton icon={require('../assets/outlineBack.png')} />
             </TouchableOpacity>
             <View style={styles.textAndPoint}>
-              <Text style={styles.textStyleMain}>{pitch ? pitch.name : ""}</Text>
-              <StarRating rating={pitch ? pitch.rating : 0} />
+              <Text style={styles.textStyleMain}>{owner ? owner.name : ""}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginRight: 24 }}>
+                <StarRating rating={owner ? owner.rating : 0} />
+                <Dropdown
+                  style={styles.dropdown}
+                  data={pitches ? generateDropdownData(pitches) : []}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  labelField="label"
+                  valueField="value"
+                  placeholderStyle={{ fontFamily: "Montserrat-SemiBold", fontSize: 12 }}
+                  placeholder={value}
+                  value={value}
+                  onChange={item => {
+                    setValue(item.value);
+                    if (pitches) {
+                      const pitchWithId = pitches.find(pitch => pitch._id === value)
+                      setShowedPitch(pitchWithId)
+                    }
+                  }}
+                />
+              </View>
             </View>
           </ImageBackground>
           <View style={styles.bottomMainContainer}>
@@ -182,12 +256,12 @@ const DetailScreen = ({ route }) => {
                   <Image source={require("../assets/price.png")} style={styles.icon} />
                   <Text style={styles.textStyle}>Ücretlere Göz At</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.textAndImageRow} onPress={() => { goToHours(pitch._id) }}>
+                <TouchableOpacity style={styles.textAndImageRow} onPress={() => { goToHours(value) }}>
                   <Image source={require("../assets/clock.png")} style={styles.icon} />
                   <Text style={styles.textStyle}>Saatlere Göz At</Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity style={styles.reservationBtn} onPress={() => { goToReservation(pitch._id) }}>
+              <TouchableOpacity style={styles.reservationBtn} onPress={() => { goToReservation(value) }}>
                 <Image source={require("../assets/reservation.png")} style={styles.icon} />
                 <Text style={[styles.textStyle, { color: "black", marginLeft: 6 }]}>Rezervasyon Yap</Text>
               </TouchableOpacity>
@@ -199,7 +273,7 @@ const DetailScreen = ({ route }) => {
               <Text style={styles.textSubHead}>Konum</Text>
               <View style={styles.locationIconAndText}>
                 <Image source={require("../assets/location.png")} style={styles.icon} />
-                <Text style={styles.locationText}>{pitch ? pitch.location.name : ""}</Text>
+                <Text style={styles.locationText}>{owner ? owner.location.name : ""}</Text>
                 <Image source={require("../assets/map.png")} style={styles.map} />
               </View>
             </View>
@@ -255,6 +329,25 @@ const styles = StyleSheet.create(
       top: height / 2,
       right: width / 2
     },
+    placeholderStyle: {
+      fontSize: 14,
+      color: "white",
+      fontFamily: "Montserrat-SemiBold"
+    },
+    selectedTextStyle: {
+      fontSize: 14,
+      color: "black",
+      fontFamily: "Montserrat-SemiBold"
+    },
+    dropdown: {
+      borderColor: 'gray',
+      borderWidth: 0.5,
+      borderRadius: 8,
+      paddingHorizontal: 8,
+      width: 100,
+      color: "#F7F6DC",
+      backgroundColor: "#F7F6DC"
+    },
     backButton: {
       marginTop: 54,
       marginLeft: 24,
@@ -269,6 +362,7 @@ const styles = StyleSheet.create(
       textAlign: 'left',
       fontFamily: "Montserrat-ExtraBold",
       maxWidth: width / 1.3,
+      marginBottom: 12
     },
     image: {
       width: width,

@@ -7,8 +7,10 @@ import BackButton from '../components/BackButton'
 import PitchCard from '../components/PitchCard'
 import { ScrollView } from 'react-native-gesture-handler'
 import PitchServices from '../services/PitchServices';
+import { useLocation } from '../context/LocationContext';
+import { calculateDistance } from '../utils/utility';
 
-const CalendarScreen = ({navigation}) => {
+const CalendarScreen = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [selectedHour, setSelectedHour] = useState(null);
@@ -18,12 +20,26 @@ const CalendarScreen = ({navigation}) => {
 
   const currentYear = new Date().getFullYear(); // Şu anki yıl
   const maxDate = new Date(currentYear, 11, 31); // Şu anki yılın son günü
+  const { location } = useLocation();
+
+
+
+
 
   const getPitches = async () => {
     try {
-      console.log(date,selectedHour)
+      console.log(date, selectedHour)
       const data = await PitchServices.getPitchByDate(selectedHour, date);
-      setPitches(data);
+      if(location){
+        const pitchesWithDistance = data.map((pitch) => {
+          const distance = calculateDistance(location, pitch.location); // Mesafeyi hesapla
+          return { ...pitch, distance };
+        });
+        pitchesWithDistance.sort((a, b) => a.distance - b.distance); // En yakın pitch'leri ilk sıraya yerleştir
+        setPitches(pitchesWithDistance); // Güncellenmiş pitch'leri ayarla
+      }else{
+        setPitches(data)
+      }
     } catch (error) {
       console.log("Error searching pitches:", error);
     }
@@ -177,7 +193,7 @@ const CalendarScreen = ({navigation}) => {
           )}
           {pitches && !showHours && !show ?
             <ScrollView
-            style={styles.scrollView}
+              style={styles.scrollView}
             >
 
               {pitches.map((pitch, index) => (
@@ -215,8 +231,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   scrollView: {
-    maxHeight: height/1.75,
-    minHeight:400
+    maxHeight: height / 1.75,
+    minHeight: 400
   },
   hoursContainer: {
     flexDirection: 'row',
@@ -315,7 +331,7 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-SemiBold",
     marginTop: 8,
     color: "#F7F6DC",
-    marginBottom:6
+    marginBottom: 6
   },
   textStyle: {
     color: '#F7F6DC',

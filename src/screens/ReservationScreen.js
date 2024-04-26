@@ -7,6 +7,7 @@ import ButtonLarge from '../components/ButtonLarge';
 import ButtonLargeOutline from '../components/ButtonLargeOutline';
 import PitchServices from '../services/PitchServices';
 import { useNavigation } from '@react-navigation/native';
+import OwnerServices from '../services/OwnerServices';
 
 const ReservationScreen = ({ route }) => {
   const navigation = useNavigation()
@@ -17,6 +18,7 @@ const ReservationScreen = ({ route }) => {
   const currentYear = new Date().getFullYear(); // Şu anki yıl
   const maxDate = new Date(currentYear, 11, 31); // Şu anki yılın son günü
   const [pitch, setPitch] = useState(null)
+  const [owner, setOwner] = useState(null)
 
   const getPitch = async () => {
     try {
@@ -27,9 +29,22 @@ const ReservationScreen = ({ route }) => {
     }
   };
 
+  const getOwner = async () => {
+    try {
+      const data = await OwnerServices.getOwnerById(pitch.owner);
+      setOwner(data);
+    } catch (error) {
+      console.log("Error searching owner:", error);
+    }
+  };
+
   useEffect(() => {
     getPitch();
   }, []);
+
+  useEffect(() => {
+    getOwner();
+  }, [pitch]);
 
 
   const goBack = () => {
@@ -131,7 +146,7 @@ const ReservationScreen = ({ route }) => {
           <Text style={styles.selectedHeadText}>
             Halı Saha Seçimi
           </Text>
-          <PitchCard dontShowBtn={1} dontShowDist={1} pitchName={pitch && pitch.name} rating={pitch && pitch.rating} />
+          <PitchCard dontShowBtn={1} dontShowDist={1} pitchName={owner && owner.name + " / " + pitch.name} rating={owner && owner.rating} />
         </View>
         <View style={styles.hourContainer}>
           <Text style={styles.selectedHeadText}>

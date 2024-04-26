@@ -12,7 +12,7 @@ class UserAuth {
       .then(response => {
         console.log(response.data.accessToken)
         if (response.data.accessToken) {
-          saveData("Token",response.data.accessToken)
+          saveData("Token", response.data.accessToken)
           return response.data.accessToken
         }
       }).catch((err) => {
@@ -38,10 +38,10 @@ class UserAuth {
   async checkUser() {
     token = await readData("Token")
     return axios
-      .get(API_URL + "checkUser", {headers:{"x-access-token":token}}).then((res)=>{
+      .get(API_URL + "checkUser", { headers: { "x-access-token": token } }).then((res) => {
         return true
-      }).catch((err)=>{
-        console.log("Check User Failed",err)
+      }).catch((err) => {
+        console.log("Check User Failed", err)
         return false
       })
 
@@ -62,10 +62,11 @@ class UserAuth {
   }
 
 
-  async getHistory () {
+  async getHistory() {
     token = await readData("Token")
-    return axios.get(API_URL + "getHistory", {headers:{"x-access-token":token}}).then(async(res) => {
-      console.log(res.data)
+    return axios.get(API_URL + "getHistory", { headers: { "x-access-token": token } }).
+    then(async (res) => {
+      return res.data
     }).catch((err) => {
       console.log(err.response.data)
     })

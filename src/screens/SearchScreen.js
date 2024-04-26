@@ -3,6 +3,7 @@ import { View, Text, Dimensions, StyleSheet, ScrollView } from 'react-native';
 import PitchCard from '../components/PitchCard';
 import PitchServices from '../services/PitchServices';
 import FormInputBox from '../components/FormInputBox';
+import OwnerServices from '../services/OwnerServices';
 
 const SearchScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,7 +19,7 @@ const SearchScreen = ({ navigation }) => {
 
   const searchPitches = async () => {
     try {
-      const data = await PitchServices.searchPitchesByName(searchQuery);
+      const data = await OwnerServices.searchOwnersByName(searchQuery);
       setSearchedPitches(data);
     } catch (error) {
       console.log("Error searching pitches:", error);
@@ -55,7 +56,7 @@ const SearchScreen = ({ navigation }) => {
                 pitchName={pitch.name}
                 distance={pitch.distance}
                 rating={pitch.rating}
-                onPress={() => { goToPitchDetail(pitch._id) }}
+                onPress={() => { goToPitchDetail(pitch.owner) }}
               />
             ))}
           </ScrollView>

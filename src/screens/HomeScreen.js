@@ -3,28 +3,47 @@ import { View, Text, Dimensions, StyleSheet, Image, ScrollView } from 'react-nat
 import PitchCard from '../components/PitchCard';
 import PitchServices from '../services/PitchServices';
 import { RefreshControl } from 'react-native-gesture-handler';
+import { useLocation } from '../context/LocationContext';
+import { calculateDistance } from '../utils/utility';
+import OwnerServices from '../services/OwnerServices';
+
 
 const HomeScreen = ({ navigation }) => {
-  const [pitches, setPitches] = useState([]);
+  const [pitches, setPitches] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  const { location } = useLocation();
+
+  // İki nokta arasındaki mesafeyi hesaplayan yardımcı fonksiyon
 
 
   const fetchPitches = async () => {
     try {
-      const data = await PitchServices.getAllPitches();
-      setPitches(data);  
-      setRefreshing(false) 
+      const data = await OwnerServices.getAllOwners();
+      if(location){
+        const pitchesWithDistance = data.map((owner) => {
+          const distance = calculateDistance(location, owner.location); // Mesafeyi hesapla
+          return { ...owner, distance };
+        });
+        pitchesWithDistance.sort((a, b) => a.distance - b.distance); // En yakın pitch'leri ilk sıraya yerleştir
+        setPitches(pitchesWithDistance); // Güncellenmiş pitch'leri ayarla
+      }else{
+        setPitches(data)
+      }
+
+      setRefreshing(false)
     } catch (error) {
       console.log("Error fetching pitches:", error);
     } finally {
-      
+
     }
   };
 
 
   useEffect(() => {
     fetchPitches();
-  },[]);
+  }, [location]);
+
 
   const goToPitchDetail = (pitchId) => {
     navigation.navigate('Detail', { pitchId }); // 'PitchDetail' isimli sayfaya pitchId parametresiyle yönlendiriyoruz
@@ -63,7 +82,9 @@ const HomeScreen = ({ navigation }) => {
               />
             }
           >
-            {pitches.map((pitch, index) => (
+            {pitches ? 
+              
+              pitches.map((pitch, index) => (
               <PitchCard
                 key={index}
                 pitchName={pitch.name}
@@ -71,7 +92,10 @@ const HomeScreen = ({ navigation }) => {
                 rating={pitch.rating}
                 onPress={() => { goToPitchDetail(pitch._id) }}
               />
-            ))}
+            ))
+            :
+            null
+            }
           </ScrollView>
         </View>
       </View>
@@ -120,7 +144,7 @@ const styles = StyleSheet.create(
     },
     scrollView: {
       maxHeight: 405,
-      minHeight:400
+      minHeight: 400
     },
     nearbyText: {
       fontFamily: "Montserrat-ExtraBold",

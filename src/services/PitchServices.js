@@ -1,29 +1,15 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
-import * as Location from 'expo-location';
 import { readData } from "../storage/AsyncStorageManager";
 const API_URL = "http://192.168.1.105:5000/pitch/";
 
 class PitchServices {
   async getAllPitches() {
     try {
-      // Kullanıcı konumunu al
-      const location = await getLocation();
-      if (!location) {
-        throw new Error("Konum bilgisi bulunamadı");
-      }
-
       const response = await axios.get(API_URL + "getAllPitches");
       const pitches = response.data.pitches;
-
-      // Her bir pitch için uzaklığı hesaplayın ve pitch objesine ekleyin
-      const pitchesWithDistance = pitches.map((pitch) => {
-        const distance = calculateDistance(location, pitch.location);
-        return { ...pitch, distance };
-      });
-
-      return pitchesWithDistance;
+      return pitches
     } catch (error) {
       console.error("Pitchler alınırken bir hata oluştu:", error);
       Alert.alert("Hata", "Pitchler alınırken bir hata oluştu.");
@@ -68,7 +54,7 @@ class PitchServices {
         hour,
         date
       });
-      const pitches = response.data.filteredPitches;
+      const pitches = response.data.owners;
 
 
       return pitches;
@@ -98,6 +84,28 @@ class PitchServices {
       return [];
     }
   }
+
+  async addPitch(name, features) {
+    const token = await readData("Token")
+    console.log(token)
+    try {
+      const response = await axios.post(
+        API_URL + "addPitch",
+        { name, features},
+        {
+          headers: { "x-access-token": token }
+        }
+      );
+      Alert.alert("Saha Ekleme Başarılı:");
+      return response.data;
+    } catch (error) {
+      console.log("Rezervasyon yaparken bir hata oluştu:", error.response.data.error);
+      Alert.alert("Rezervasyon yaparken bir hata oluştu:", error.response.data.error);
+      return [];
+    }
+  }
+
+  
 
 
 }
