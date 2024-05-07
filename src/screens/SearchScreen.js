@@ -70,8 +70,7 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   main: {
     backgroundColor: "white",
-    width: width,
-    height: height
+    flex:1
   },
   head: {
     flexDirection: 'row',

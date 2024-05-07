@@ -16,7 +16,8 @@ class UserAuth {
           return response.data.accessToken
         }
       }).catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response.data.error)
+        Alert.alert(toString(err.response.data.error))
       })
 
       ;
@@ -72,6 +73,7 @@ class UserAuth {
     })
       ;
   }
+
 
 }
 export default new UserAuth();

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { AntDesign, Ionicons, SimpleLineIcons } from '@expo/vector-icons'; // AntDesign kütüphanesini kullanarak yıldız ikonlarını ekliyoruz
 
-const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn, dontShowDist, status }) => {
+const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn, dontShowDist, status, dontShowRtng ,onPress_update}) => {
     // Yıldız ikonlarını oluşturmak için bir fonksiyon
     const renderStars = (rating) => {
         const stars = [];
@@ -23,9 +23,16 @@ const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn, dontShow
         <View style={styles.card}>
             <Text style={styles.title}>{pitchName}</Text>
             <View style={styles.bottomContainer}>
-                <View style={styles.starView}>
-                    {renderStars(rating)}
-                </View>
+                {
+                    !dontShowRtng ?
+                        <View style={styles.starView}>
+                            {renderStars(rating)}
+                        </View>
+                        :
+                        <TouchableOpacity style={[styles.button,{backgroundColor:"#7FB77E"}]} onPress={onPress_update}>
+                            <Text style={[styles.buttonText,{}]}>{"Düzenle"}</Text>
+                        </TouchableOpacity>
+                }
 
                 {!dontShowDist ?
                     <View style={styles.distanceView}>
@@ -36,14 +43,14 @@ const PitchCard = ({ distance, rating, pitchName, onPress, dontShowBtn, dontShow
                             <Text style={styles.kmText}>km</Text>
                         </View>
                     </View>
-                    : status ? 
-                    <View style={styles.distanceView}>
-                        <View style={styles.textView}>
-                            <Text style={styles.distance}>{status}</Text>
+                    : status ?
+                        <View style={styles.distanceView}>
+                            <View style={styles.textView}>
+                                <Text style={styles.distance}>{status}</Text>
+                            </View>
                         </View>
-                    </View>
-                    : 
-                    null
+                        :
+                        null
                 }
 
 

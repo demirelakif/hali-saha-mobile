@@ -35,7 +35,7 @@ const initialFeatures = {
   kramponHizmeti: false,
 };
 
-const AddPitchScreen = () => {
+const AddPitchScreen = ({ route }) => {
   const [pitchName, setPitchName] = useState(null);
   const navigation = useNavigation();
 
@@ -48,8 +48,13 @@ const AddPitchScreen = () => {
 
   const handleAddPitch = () => {
     // Özellikleri true/false olarak iletin
-    const response = PitchServices.addPitch(pitchName, selectedFeatures);
-    console.log(response);
+    if (route.params) {
+      
+    } else {
+      const response = PitchServices.addPitch(pitchName, selectedFeatures);
+      console.log(response);
+    }
+
   };
 
   // Özelliği seçmek için bir işlev
@@ -73,6 +78,18 @@ const AddPitchScreen = () => {
       <Text style={styles.text}>{item.text}</Text>
     </TouchableOpacity>
   );
+
+  useEffect(async () => {
+    if (route.params) {
+      const pitch = await PitchServices.getPitchById(route.params.pitchId)
+      // const features = Object.entries(pitch.features)
+      //   .filter(([key, value]) => value) // sadece true olanları al
+      //   .map(([key, value]) => key); // anahtarları al
+      // setSelectedFeatures(features)
+      setSelectedFeatures(pitch.features)
+      setPitchName(pitch.name)
+    }
+  }, [])
 
   return (
     <View style={styles.main}>

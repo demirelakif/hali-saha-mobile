@@ -17,21 +17,25 @@ const HomeScreen = ({ navigation }) => {
   // İki nokta arasındaki mesafeyi hesaplayan yardımcı fonksiyon
 
 
-  const fetchPitches = async () => {
+  const fetchPitches = () => {
     try {
-      const data = await OwnerServices.getAllOwners();
-      if(location){
-        const pitchesWithDistance = data.map((owner) => {
-          const distance = calculateDistance(location, owner.location); // Mesafeyi hesapla
-          return { ...owner, distance };
-        });
-        pitchesWithDistance.sort((a, b) => a.distance - b.distance); // En yakın pitch'leri ilk sıraya yerleştir
-        setPitches(pitchesWithDistance); // Güncellenmiş pitch'leri ayarla
-      }else{
-        setPitches(data)
+      async function fetchData() {
+        const data = await OwnerServices.getAllOwners();
+        if (location) {
+          const pitchesWithDistance = data.map((owner) => {
+            const distance = calculateDistance(location, owner.location); // Mesafeyi hesapla
+            return { ...owner, distance };
+          });
+          pitchesWithDistance.sort((a, b) => a.distance - b.distance); // En yakın pitch'leri ilk sıraya yerleştir
+          setPitches(pitchesWithDistance); // Güncellenmiş pitch'leri ayarla
+        } else {
+          setPitches(data)
+        }
+
+        setRefreshing(false)
       }
 
-      setRefreshing(false)
+      fetchData();
     } catch (error) {
       console.log("Error fetching pitches:", error);
     } finally {
@@ -82,19 +86,19 @@ const HomeScreen = ({ navigation }) => {
               />
             }
           >
-            {pitches ? 
-              
+            {pitches ?
+
               pitches.map((pitch, index) => (
-              <PitchCard
-                key={index}
-                pitchName={pitch.name}
-                distance={pitch.distance}
-                rating={pitch.rating}
-                onPress={() => { goToPitchDetail(pitch._id) }}
-              />
-            ))
-            :
-            null
+                <PitchCard
+                  key={index}
+                  pitchName={pitch.name}
+                  distance={pitch.distance}
+                  rating={pitch.rating}
+                  onPress={() => { goToPitchDetail(pitch._id) }}
+                />
+              ))
+              :
+              null
             }
           </ScrollView>
         </View>

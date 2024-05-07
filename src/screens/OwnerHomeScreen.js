@@ -1,23 +1,48 @@
 import { View, Text, Dimensions, StyleSheet, Image, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PitchCard from '../components/PitchCard'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { RefreshControl, TouchableOpacity } from 'react-native-gesture-handler'
+import OwnerServices from '../services/OwnerServices'
 
 const OwnerHomeScreen = ({ navigation }) => {
 
-  const goAddPitch = () =>{
+  const [myPitches, setMyPitches] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const goAddPitch = () => {
     navigation.navigate("AddPitch")
   }
 
-  const goCalendar = () =>{
+  const goCalendar = () => {
     navigation.navigate("OwnerCalendar")
   }
 
   const goToPitchDetail = (pitchId) => {
     navigation.navigate('Detail', { pitchId }); // 'PitchDetail' isimli sayfaya pitchId parametresiyle yönlendiriyoruz
   };
+  const goToUpdateScreen = (pitchId) => {
+    navigation.navigate("AddPitch", { pitchId })
+  }
+  const getMyPitches = async () => {
+    try {
+      const data = await OwnerServices.getMyPitches();
+      setMyPitches(data);
+      setRefreshing(false);
+    } catch (error) {
+      console.log("Error getting history:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getMyPitches(); // Async call within the useEffect, but not returning a Promise
+    };
+    fetchData(); // Call the async function
+  }, []); // No cleanup function needed, so we don't return anything from useEffect
+
+
   return (
-<View style={styles.main}>
+    <View style={styles.main}>
       <View style={styles.head}>
         {/* <View style={styles.backButton}>
           <BackButton onpress={goToLogin} icon={require('../assets/outlineBack.png')} />
@@ -31,36 +56,53 @@ const OwnerHomeScreen = ({ navigation }) => {
         <View style={styles.nearbyPitches}>
           <View style={styles.textAndImage}>
             <View style={styles.profileCard}>
-                <View style={styles.profileRow}>
-                    <Image style={styles.profileImage} source={require("../assets/profileImage.png")}/>
-                    <View style={styles.nameAndId}>
-                        <Text style={styles.nameText}>Akif Demirel</Text>
-                        <Text style={styles.idText}>Id:2030233199</Text>
-                    </View>
+              <View style={styles.profileRow}>
+                <Image style={styles.profileImage} source={require("../assets/profileImage.png")} />
+                <View style={styles.nameAndId}>
+                  <Text style={styles.nameText}>Akif Demirel</Text>
+                  <Text style={styles.idText}>Id:2030233199</Text>
                 </View>
+              </View>
             </View>
           </View>
           <Text style={styles.historyText}>Sahalarım</Text>
-          <ScrollView style={styles.scrollView}>
-            <PitchCard pitchName={"Rampalı Halısaha"} dontShowDist={1} rating={2}  onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Acarlar Halısaha"} dontShowDist={1} rating={4}  onPress={() => { console.log("pressed") }} />
-            <PitchCard pitchName={"Rampalı Halısaha"} dontShowDist={1} rating={2}  onPress={() => { console.log("pressed") }} />
-         </ScrollView>
+          <ScrollView style={styles.scrollView}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  setRefreshing(true);
+                  getMyPitches()
+                }}
+              />
+            }
+          >
+            {
+              myPitches ?
+                myPitches.map(
+                  (pitch) => (
+                    <PitchCard key={pitch._id} pitchName={pitch.name} dontShowDist={1} dontShowRtng={1} onPress_update={() => { goToUpdateScreen(pitch._id) }}
+                      onPress={() => { goToPitchDetail(pitch.owner) }} />
+                  ))
+                :
+                null
+            }
+          </ScrollView>
         </View>
 
       </View>
 
       <TouchableOpacity style={styles.button} onPress={goAddPitch}>
-            <Text style={styles.buttonText}>
-                Saha Ekle
-            </Text>
-        </TouchableOpacity>
+        <Text style={styles.buttonText}>
+          Saha Ekle
+        </Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={goCalendar}>
-            <Text style={styles.buttonText}>
-                Takvim Düzenle
-            </Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={goCalendar}>
+        <Text style={styles.buttonText}>
+          Takvim Düzenle
+        </Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -70,26 +112,26 @@ const styles = StyleSheet.create(
   {
     main: {
       backgroundColor: "white",
-      width:width,
-      height:height
+      width: width,
+      height: height
     },
     backButton: {
       marginLeft: 24
     },
-    button:{
-        backgroundColor:"#7FB77E",
-        borderRadius:16,
-        paddingVertical:8,
-        justifyContent: 'center',
-        width:width-48,
-        alignSelf:'center',
-        marginTop:18
+    button: {
+      backgroundColor: "#7FB77E",
+      borderRadius: 16,
+      paddingVertical: 8,
+      justifyContent: 'center',
+      width: width - 48,
+      alignSelf: 'center',
+      marginTop: 18
     },
-    buttonText:{
-        fontFamily:"Montserrat-ExtraBold",
-        color:"#F7F6DC",
-        marginLeft:20,
-        fontSize:27
+    buttonText: {
+      fontFamily: "Montserrat-ExtraBold",
+      color: "#F7F6DC",
+      marginLeft: 20,
+      fontSize: 27
     },
     head: {
       flexDirection: 'row',
@@ -97,43 +139,43 @@ const styles = StyleSheet.create(
       alignItems: 'center',
 
     },
-    profileImage:{
-      width:60,
-      height:60
+    profileImage: {
+      width: 60,
+      height: 60
     },
-    nameAndId:{
-      marginLeft:12,
+    nameAndId: {
+      marginLeft: 12,
     },
-    historyText:{
-      fontFamily:"Montserrat-Bold",
-      fontSize:20,
-      marginBottom:12
+    historyText: {
+      fontFamily: "Montserrat-Bold",
+      fontSize: 20,
+      marginBottom: 12
     },
-    nameText:{
-      fontFamily:"Montserrat-Medium",
-      fontSize:16,
-      marginBottom:12
+    nameText: {
+      fontFamily: "Montserrat-Medium",
+      fontSize: 16,
+      marginBottom: 12
     },
-    idText:{
-      fontFamily:"Montserrat-Medium",
-      fontSize:16
+    idText: {
+      fontFamily: "Montserrat-Medium",
+      fontSize: 16
     },
     headText: {
       marginLeft: 24
     },
-    profileRow:{
-      flexDirection:'row',
-      alignItems:'center',
+    profileRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
     },
-    profileCard:{
-      backgroundColor:"white",
-      minWidth:width/2,
-      height:80,
-      borderRadius:16,
-      borderColor:"black",
-      borderWidth:2,
-      alignItems:'center',
-      justifyContent:'center'
+    profileCard: {
+      backgroundColor: "white",
+      minWidth: width / 2,
+      height: 80,
+      borderRadius: 16,
+      borderColor: "black",
+      borderWidth: 2,
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     headTextStyle: {
       fontSize: 27,
@@ -145,7 +187,7 @@ const styles = StyleSheet.create(
       borderRadius: 16,
       borderStyle: "solid",
       borderWidth: 2,
-      borderBottomWidth:6,
+      borderBottomWidth: 6,
       backgroundColor: "#7FB77E",//textGreen,
       marginTop: 16,
       flexDirection: "column",
@@ -157,27 +199,28 @@ const styles = StyleSheet.create(
       color: "#F7F6DC",
       fontWeight: "800",
       justifyContent: "space-between",
-      marginHorizontal:16,
+      marginHorizontal: 16,
     },
     scrollView: {
       maxHeight: 430,
+      minHeight: 320,
     },
     nearbyText: {
       fontFamily: "Montserrat-ExtraBold",
       color: "#F7F6DC",
       fontSize: 27
     },
-    textAndImage:{
-      flexDirection:'row',
-      alignItems:'center',
-      justifyContent:'space-between',
+    textAndImage: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
       marginBottom: 24,
       marginTop: 24,
     },
-    imageStyle:{
-      maxWidth:80,
-      maxHeight:80,
-      tintColor:"#007109"
+    imageStyle: {
+      maxWidth: 80,
+      maxHeight: 80,
+      tintColor: "#007109"
     }
 
   });

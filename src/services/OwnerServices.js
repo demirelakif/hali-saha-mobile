@@ -16,7 +16,8 @@ class OwnerServices {
           return response.data.accessToken
         }
       }).catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response.data.error)
+        Alert.alert(err.response.data.error)
       })
 
       ;
@@ -90,7 +91,19 @@ class OwnerServices {
       return [];
     }
   }
+  async getMyPitches() {
+    token = await readData("Token")
+    return axios
+      .get(API_URL + "getMyPitches", {headers:{"x-access-token":token}}).
+      then((res)=>{
+        return res.data.pitches
+      }).catch((err)=>{
+        console.log("error getting mypitches",err)
+        return err.data
 
+      })
+
+  }
 
   async searchOwnersByName(name) {
     try {

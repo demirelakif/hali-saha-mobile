@@ -55,6 +55,7 @@ const StackNavigator = () => {
               <Stack.Screen options={{ headerShown: false }} name="OwnerCalendar" component={OwnerCalendarScreen} />
               <Stack.Screen options={{ headerShown: false }} name="AddPitch" component={AddPitchScreen} />
               <Stack.Screen options={{ headerShown: false }} name="Detail" component={DetailScreen} />
+              <Stack.Screen options={{ headerShown: false }} name="Hours" component={HoursScreen} />
             </>
 
       }

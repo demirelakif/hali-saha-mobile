@@ -39,7 +39,6 @@ class PitchServices {
       });
       const pitch = response.data.pitch;
 
-
       return pitch;
     } catch (error) {
       console.error("Sahalar aranırken bir hata oluştu:", error.response.data);
@@ -103,6 +102,18 @@ class PitchServices {
       Alert.alert("Rezervasyon yaparken bir hata oluştu:", error.response.data.error);
       return [];
     }
+  }
+
+
+  async cancelReservation(request) {
+    token = await readData("Token")
+    return axios.post(API_URL + "cancelReservation",{request}, { headers: { "x-access-token": token }}).
+    then(async (res) => {
+      return res.data
+    }).catch((err) => {
+      console.log(err.response.data)
+    })
+      ;
   }
 
   

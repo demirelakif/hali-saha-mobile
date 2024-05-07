@@ -17,12 +17,22 @@ const ProfileScreen = ({ navigation }) => {
     try {
       // console.log(await readData("Token"))
       const data = await UserAuth.getHistory();
+      console.log(data.length)
       setHistory(data);
+      //console.log(data[0].reservation._id)
 
       setRefreshing(false)
     } catch (error) {
       console.log("Error getting history:", error);
     }
+  };
+
+  const goToPitchDetail = (pitchId) => {
+    navigation.navigate('Detail', { pitchId }); // 'PitchDetail' isimli sayfaya pitchId parametresiyle yönlendiriyoruz
+  };
+
+  const handleCancel = (history) => {
+    PitchServices.cancelReservation(history)
   };
 
   useEffect(() => {
@@ -82,7 +92,7 @@ const ProfileScreen = ({ navigation }) => {
                   rating={history.owner.rating}
                   status={history.reservation.isAvailable == "Meşgul" ? "Tamamlandı" : history.reservation.isAvailable}
                   dontShowDist={1}
-                  onPress={() => { goToPitchDetail(pitch._id) }}
+                  onPress={() => {history.reservation.isAvailable == "İstek Gönderildi" ? handleCancel(history) :goToPitchDetail(history.owner) }}
                 />
               ))
               :
@@ -104,8 +114,8 @@ const styles = StyleSheet.create(
   {
     main: {
       backgroundColor: "white",
-      width: width,
-      height: height
+      width:width,
+      height:height*10
     },
     backButton: {
       marginLeft: 24
@@ -180,6 +190,7 @@ const styles = StyleSheet.create(
     },
     scrollView: {
       maxHeight: 430,
+      minHeight:300,
     },
     nearbyText: {
       fontFamily: "Montserrat-ExtraBold",

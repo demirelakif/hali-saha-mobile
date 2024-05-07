@@ -17,8 +17,11 @@ const DetailScreen = ({ route }) => {
 
   const getOwner = async () => {
     try {
-      const data = await OwnerServices.getOwnerById(route.params.pitchId);
-      setOwner(data);
+      async function fetchData() {
+        const data = await OwnerServices.getOwnerById(route.params.pitchId);
+        setOwner(data);
+      }
+      fetchData();
     } catch (error) {
       console.log("Error searching Owner:", error);
     }
@@ -26,32 +29,38 @@ const DetailScreen = ({ route }) => {
 
   const getPitch = async (id) => {
     try {
-      const data = await PitchServices.getPitchById(id);
-      setShowedPitch(data)
-      setValue(data._id)
+      async function fetchData() {
+        const data = await PitchServices.getPitchById(id);
+        setShowedPitch(data)
+        setValue(data._id)
+      }
+      fetchData();
     } catch (error) {
-      console.log("Error searching Owner:", error);
+      console.log("Error searching getPitch:", error);
     }
   };
 
   const getPitches = async (id) => {
     try {
-      const data = await PitchServices.getPitchById(id);
+      async function fetchData() {
+        const data = await PitchServices.getPitchById(id);
 
-      // Pitch zaten dizideyse eklemeyi önlemek için kontrol
-      setPitches((prevPitches) => {
-        const pitchExists = prevPitches.some((pitch) => pitch._id === data._id);
+        // Pitch zaten dizideyse eklemeyi önlemek için kontrol
+        setPitches((prevPitches) => {
+          const pitchExists = prevPitches.some((pitch) => pitch._id === data._id);
 
-        if (!pitchExists) {
-          // Saha henüz mevcut değilse, ekle
-          return prevPitches.concat(data);
-        } else {
-          // Saha zaten varsa, önceki diziyi döndür
-          return prevPitches;
-        }
-      });
+          if (!pitchExists) {
+            // Saha henüz mevcut değilse, ekle
+            return prevPitches.concat(data);
+          } else {
+            // Saha zaten varsa, önceki diziyi döndür
+            return prevPitches;
+          }
+        });
+      }
+      fetchData();
     } catch (error) {
-      console.log("Error searching Owner:", error);
+      console.log("Error searching getPitches:", error);
     }
   };
 
@@ -238,9 +247,11 @@ const DetailScreen = ({ route }) => {
                   placeholder={value}
                   value={value}
                   onChange={item => {
+                    console.log(item)
                     setValue(item.value);
                     if (pitches) {
-                      const pitchWithId = pitches.find(pitch => pitch._id === value)
+                      const pitchWithId = pitches.find(pitch => pitch._id === item.value)
+                      // console.log(pitchWithId.name)
                       setShowedPitch(pitchWithId)
                     }
                   }}
