@@ -19,6 +19,7 @@ import OwnerCalendarScreen from '../screens/OwnerCalendarScreen'
 import OwnerHomeScreen from '../screens/OwnerHomeScreen';
 import OwnerLoginScreen from '../screens/OwnerLoginScreen';
 import OwnerRegisterScreen from '../screens/OwnerRegisterScreen';
+import NotificationScreen from '../screens/NotificationScreen';
 
 
 const Stack = createStackNavigator();
@@ -56,6 +57,7 @@ const StackNavigator = () => {
               <Stack.Screen options={{ headerShown: false }} name="AddPitch" component={AddPitchScreen} />
               <Stack.Screen options={{ headerShown: false }} name="Detail" component={DetailScreen} />
               <Stack.Screen options={{ headerShown: false }} name="Hours" component={HoursScreen} />
+              <Stack.Screen options={{ headerShown: false }} name="Notification" component={NotificationScreen} />
             </>
 
       }

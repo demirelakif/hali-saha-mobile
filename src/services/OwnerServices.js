@@ -105,6 +105,21 @@ class OwnerServices {
 
   }
 
+
+  async getMyRequests() {
+    token = await readData("Token")
+    return axios
+      .get(API_URL + "getMyRequests", {headers:{"x-access-token":token}}).
+      then((res)=>{
+        return res.data.data
+      }).catch((err)=>{
+        console.log("error getting mypitches",err)
+        return err.data
+
+      })
+
+  }
+
   async searchOwnersByName(name) {
     try {
       const response = await axios.post(API_URL + "getOwnersByName", {

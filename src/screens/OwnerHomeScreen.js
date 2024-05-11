@@ -33,6 +33,10 @@ const OwnerHomeScreen = ({ navigation }) => {
     }
   };
 
+  const goNotificationScreen = () =>{
+    navigation.navigate("Notification")
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       await getMyPitches(); // Async call within the useEffect, but not returning a Promise
@@ -47,9 +51,14 @@ const OwnerHomeScreen = ({ navigation }) => {
         {/* <View style={styles.backButton}>
           <BackButton onpress={goToLogin} icon={require('../assets/outlineBack.png')} />
         </View> */}
+
         <View style={styles.headText}>
           <Text style={styles.headTextStyle}>AnaSayfa</Text>
         </View>
+        <TouchableOpacity onPress={goNotificationScreen}>
+          <Image style={{ width: 32, height: 32, right: 0 }} source={require("../assets/notification.png")} />
+        </TouchableOpacity>
+
       </View>
 
       <View style={styles.box}>
@@ -137,7 +146,8 @@ const styles = StyleSheet.create(
       flexDirection: 'row',
       marginTop: 54,
       alignItems: 'center',
-
+      justifyContent:'space-between',
+      marginHorizontal:24
     },
     profileImage: {
       width: 60,
@@ -161,7 +171,6 @@ const styles = StyleSheet.create(
       fontSize: 16
     },
     headText: {
-      marginLeft: 24
     },
     profileRow: {
       flexDirection: 'row',
