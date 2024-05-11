@@ -120,6 +120,25 @@ class OwnerServices {
 
   }
 
+  async acceptRequest(pitchId,reservationId,newStatus) {
+    token = await readData("Token")
+    return axios
+      .post(API_URL + "updateRequest", 
+      { pitchId, reservationId, newStatus },
+      {headers:{"x-access-token":token}
+    
+    }
+    ).
+      then((res)=>{
+        return res.data
+      }).catch((err)=>{
+        console.log("error getting mypitches",err)
+        return err.data
+
+      })
+
+  }
+
   async searchOwnersByName(name) {
     try {
       const response = await axios.post(API_URL + "getOwnersByName", {

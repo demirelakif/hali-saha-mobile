@@ -14,8 +14,9 @@ const NotificationScreen = () => {
         navigation.goBack()
     }
 
-    const handleAccept = () => {
-        
+    const handleAccept = (pitchId,reservationId) => {
+        const res = OwnerServices.acceptRequest(pitchId,reservationId,"Meşgul")
+        console.log(res)
     }
 
     useEffect(() => {
@@ -59,7 +60,7 @@ const NotificationScreen = () => {
                                             <TouchableOpacity onPress={{}}>
                                                 <Image style={{ width: 24, height: 24}} source={require("../assets/x.png")} />
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={handleAccept}>
+                                            <TouchableOpacity onPress={handleAccept(request.pitchId,request.reservationDayId)}>
                                                 <Image style={{ width: 24, height: 24, tintColor: "green",marginLeft:24 }} source={require("../assets/tick.png")} />
                                             </TouchableOpacity>
                                         </View>
