@@ -96,7 +96,7 @@ const ProfileScreen = ({ navigation }) => {
                 />
               ))
               :
-              <Text>Asd</Text>
+              <Text style={styles.nameText}>Yükleniyor...</Text>
             }
           </ScrollView>
         </View>
@@ -189,7 +189,7 @@ const styles = StyleSheet.create(
       marginHorizontal: 16,
     },
     scrollView: {
-      maxHeight: 430,
+      maxHeight: 365,
       minHeight:300,
     },
     nearbyText: {

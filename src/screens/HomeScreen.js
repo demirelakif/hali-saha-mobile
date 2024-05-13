@@ -12,7 +12,7 @@ const HomeScreen = ({ navigation }) => {
   const [pitches, setPitches] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  const { location } = useLocation();
+  const { location,getLocation } = useLocation();
 
   // İki nokta arasındaki mesafeyi hesaplayan yardımcı fonksiyon
 
@@ -29,6 +29,7 @@ const HomeScreen = ({ navigation }) => {
           pitchesWithDistance.sort((a, b) => a.distance - b.distance); // En yakın pitch'leri ilk sıraya yerleştir
           setPitches(pitchesWithDistance); // Güncellenmiş pitch'leri ayarla
         } else {
+          getLocation()
           setPitches(data)
         }
 

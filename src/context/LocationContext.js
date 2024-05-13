@@ -19,6 +19,9 @@ export const LocationProvider = ({ children }) => {
             }
 
             const location = await Location.getCurrentPositionAsync({});
+            const lat = location.coords.latitude
+            const lng = location.coords.longitude
+            setLocation({lat,lng})
             return {
                 lat: location.coords.latitude,
                 lng: location.coords.longitude
@@ -29,10 +32,10 @@ export const LocationProvider = ({ children }) => {
         }
     }
 
-    useEffect(async()=>{
-        const location =  await getLocation()
-        setLocation(location)
-        console.log(location)
+    useEffect(()=>{
+        // const location = getLocation()
+        // setLocation(location)
+        getLocation();
     },[])
 
 
@@ -40,7 +43,8 @@ export const LocationProvider = ({ children }) => {
     return (
         <LocationContext.Provider
             value={{
-                location
+                location,
+                getLocation
             }}
         >
             {children}
