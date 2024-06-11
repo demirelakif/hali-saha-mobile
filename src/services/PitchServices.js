@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { readData } from "../storage/AsyncStorageManager";
-const API_URL = "http://192.168.1.105:5000/pitch/";
+const API_URL = "5000/pitch/";
 
 class PitchServices {
   async getAllPitches() {
