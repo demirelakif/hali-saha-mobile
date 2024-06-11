@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Alert } from "react-native";
 import { readData, saveData } from "../storage/AsyncStorageManager";
-const API_URL = "http://192.168.1.101:5000/user/";
+const API_URL = "http://192.168.1.105:5000/user/";
 class UserAuth {
   signin(phoneNumber, password) {
     return axios

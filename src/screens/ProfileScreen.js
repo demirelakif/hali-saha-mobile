@@ -1,4 +1,4 @@
-import { View, Text, Dimensions, StyleSheet, Image, Keyboard } from 'react-native'
+import { View, Text, Dimensions, StyleSheet, Image, Keyboard, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import BackButton from '../components/BackButton'
 import PitchCard from '../components/PitchCard'
@@ -17,11 +17,20 @@ const ProfileScreen = ({ navigation }) => {
     try {
       // console.log(await readData("Token"))
       const data = await UserAuth.getHistory();
+      console.log(data)
+      // 'İstek Gönderildi' olanları en üstte olacak şekilde sıralama
+      data.sort((a, b) => {
+        if (a.reservation.isAvailable === "İstek Gönderildi" && b.reservation.isAvailable !== "İstek Gönderildi") {
+          return -1;
+        }
+        if (a.reservation.isAvailable !== "İstek Gönderildi" && b.reservation.isAvailable === "İstek Gönderildi") {
+          return 1;
+        }
+        return 0;
+      });
       console.log(data.length)
       setHistory(data);
-      //console.log(data[0].reservation._id)
-
-      setRefreshing(false)
+      setRefreshing(false);
     } catch (error) {
       console.log("Error getting history:", error);
     }
@@ -32,7 +41,22 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handleCancel = (history) => {
-    PitchServices.cancelReservation(history)
+    Alert.alert(
+      "Rezervasyonu İptal Et",
+      "İptal etmek istediğinizden emin misiniz?",
+      [
+        {
+          text: "Hayır",
+          onPress: () => console.log("İptal edildi"),
+          style: "cancel"
+        },
+        {
+          text: "Evet",
+          onPress: () => PitchServices.cancelReservation(history)
+        }
+      ],
+      { cancelable: false }
+    );
   };
 
   useEffect(() => {

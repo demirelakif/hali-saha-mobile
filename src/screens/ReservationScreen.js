@@ -1,4 +1,4 @@
-import { View, Text, Dimensions, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
+import { View, Text, Dimensions, StyleSheet, TouchableOpacity, Image, Alert, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import BackButton from '../components/BackButton';
 import PitchCard from '../components/PitchCard';
@@ -88,6 +88,8 @@ const ReservationScreen = ({ route }) => {
     const selectedHourStart = selectedHour.toString().padStart(2, '0');
     console.log(pitch._id, date, selectedHourStart)
     PitchServices.reservePitch(pitch._id, date, selectedHourStart)
+    navigation.navigate('Profile');
+
   }
 
   const getResult = () => {
